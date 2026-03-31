@@ -2,13 +2,14 @@
 
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ButtonHTMLAttributes } from 'react';
+import { ComponentPropsWithoutRef, ReactNode } from 'react';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
-}
+  children: ReactNode;
+} & Omit<ComponentPropsWithoutRef<typeof motion.button>, 'children'>;
 
 export const Button = ({
   children,
@@ -20,13 +21,13 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 select-none disabled:opacity-50 disabled:cursor-not-allowed';
+    'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 select-none disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-transparent hover:shadow-pink-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400/50';
 
   const variants = {
-    primary: 'bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 shadow-lg shadow-pink-500/25',
+    primary: 'bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent),linear-gradient(120deg,#ec4899,#f43f5e)] text-white hover:brightness-105 active:brightness-95 border border-pink-500/40',
     secondary: 'bg-white/10 text-white hover:bg-white/20 border border-white/10',
-    ghost: 'text-white/70 hover:text-white hover:bg-white/10',
-    danger: 'bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/20',
+    ghost: 'text-white/70 hover:text-white hover:bg-white/10 border border-transparent',
+    danger: 'bg-red-500/20 text-red-200 hover:bg-red-500/30 border border-red-500/30',
   };
 
   const sizes = {
@@ -37,11 +38,13 @@ export const Button = ({
 
   return (
     <motion.button
-      whileHover={{ scale: disabled || loading ? 1 : 1.02 }}
-      whileTap={{ scale: disabled || loading ? 1 : 0.97 }}
+      whileHover={{ scale: disabled || loading ? 1 : 1.015, y: disabled || loading ? 0 : -1 }}
+      whileTap={{ scale: disabled || loading ? 1 : 0.985 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 18 }}
       className={cn(baseStyles, variants[variant], sizes[size], className)}
       disabled={disabled || loading}
-      {...(props as any)}
+      aria-busy={loading}
+      {...props}
     >
       {loading ? (
         <div className="flex items-center gap-2">

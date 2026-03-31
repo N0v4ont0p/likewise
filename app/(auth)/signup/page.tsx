@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { signUp } from '@/lib/auth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -23,13 +23,23 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [statusHint, setStatusHint] = useState('');
 
   const passwordStrength = passwordRequirements.filter((r) => r.test(password)).length;
   const isPasswordValid = passwordStrength === passwordRequirements.length;
+  const canSubmit = username.trim().length >= 3 && isPasswordValid && password === confirmPassword && !loading;
+
+  const getErrorMessage = (err: unknown) => {
+    if (err && typeof err === 'object' && 'message' in err && typeof (err as { message?: string }).message === 'string') {
+      return (err as { message: string }).message;
+    }
+    return 'Failed to create account. Please try again.';
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setStatusHint('Checking your details...');
 
     if (!isPasswordValid) {
       setError('Please meet all password requirements');
@@ -42,28 +52,49 @@ export default function SignupPage() {
     }
 
     setLoading(true);
+    setStatusHint('Creating your private space...');
 
     try {
       await signUp(username.trim(), password);
       router.replace('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Failed to create account');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
+      setStatusHint('');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <motion.div
+        className="absolute inset-0 -z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, scale: 1.02 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(236,72,153,0.12),transparent),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.08),transparent)] blur-3xl" />
+        <motion.div
+          className="absolute -bottom-10 right-5 h-48 w-48 rounded-full bg-pink-500/20 blur-[120px]"
+          animate={{ y: [0, -10, 0], scale: [1, 1.05, 1] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </motion.div>
       <div className="w-full max-w-sm">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <GlassCard className="p-8 space-y-6">
+          <GlassCard className="p-8 space-y-6 shadow-[0_20px_80px_rgba(236,72,153,0.15)]">
             <div className="text-center space-y-2">
-              <div className="text-4xl">💝</div>
+              <motion.div
+                animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.08, 1] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                className="text-4xl"
+              >
+                💝
+              </motion.div>
               <h1 className="text-2xl font-bold text-white">Create account</h1>
               <p className="text-white/50 text-sm">Join Mutual Match</p>
             </div>
@@ -143,23 +174,31 @@ export default function SignupPage() {
                 autoComplete="new-password"
                 error={confirmPassword && password !== confirmPassword ? 'Passwords do not match' : undefined}
                 required
-              />
+                />
 
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-red-400 text-center"
-                >
-                  {error}
-                </motion.p>
-              )}
+              <AnimatePresence>
+                {(error || statusHint) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="text-sm text-center min-h-[20px]"
+                  >
+                    {error ? (
+                      <span className="text-red-400">{error}</span>
+                    ) : (
+                      <span className="text-white/60">{statusHint}</span>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <Button
                 type="submit"
                 variant="primary"
                 size="lg"
                 loading={loading}
+                disabled={!canSubmit}
                 className="w-full mt-2"
               >
                 Create Account

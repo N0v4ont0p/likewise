@@ -51,7 +51,9 @@ export default function SettingsPage() {
             </div>
             <div>
               <p className="font-medium text-white">{user?.username}</p>
-              <p className="text-xs text-white/30">Member since account creation</p>
+              <p className="text-xs text-white/30">
+                {user?.createdAt ? `Joined ${new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}` : 'Member'}
+              </p>
             </div>
           </div>
         </GlassCard>

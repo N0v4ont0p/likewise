@@ -32,9 +32,9 @@ export const createGroup = async (userId: string, username: string, groupName: s
     if (snapshot.empty) break;
     inviteCode = generateInviteCode();
     attempts++;
-    if (attempts === 10) {
-      throw new Error('Failed to generate a unique invite code. Please try again.');
-    }
+  }
+  if (attempts === 10) {
+    throw new Error('Failed to generate a unique invite code. Please try again.');
   }
 
   const groupRef = await addDoc(collection(db, 'groups'), {

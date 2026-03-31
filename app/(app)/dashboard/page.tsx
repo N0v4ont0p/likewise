@@ -39,14 +39,15 @@ export default function DashboardPage() {
     if (!user || !groupName.trim()) return;
     setError('');
     setSubmitting(true);
+    const getErrorMessage = (err: unknown) => (err instanceof Error ? err.message : 'Something went wrong');
     try {
       const group = await createGroup(user.id, user.username, groupName.trim());
       setGroups((prev) => [...prev, { group, role: 'owner' }]);
       setModal(null);
       setGroupName('');
       router.push(`/class/${group.id}`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -57,6 +58,7 @@ export default function DashboardPage() {
     if (!user || !inviteCode.trim()) return;
     setError('');
     setSubmitting(true);
+    const getErrorMessage = (err: unknown) => (err instanceof Error ? err.message : 'Something went wrong');
     try {
       const group = await joinGroupByCode(user.id, user.username, inviteCode.trim());
       setGroups((prev) => {
@@ -67,8 +69,8 @@ export default function DashboardPage() {
       setModal(null);
       setInviteCode('');
       router.push(`/class/${group.id}`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }

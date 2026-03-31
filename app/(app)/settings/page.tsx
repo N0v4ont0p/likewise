@@ -21,15 +21,20 @@ export default function SettingsPage() {
     e.preventDefault();
     setError('');
     setDeleting(true);
+    const formatError = (err: unknown) => {
+      const errorLike = err as { code?: string; message?: string };
+      if (errorLike?.code === 'auth/wrong-password' || errorLike?.code === 'auth/invalid-credential') {
+        return 'Incorrect password';
+      }
+      if (errorLike?.message) return errorLike.message;
+      if (err instanceof Error) return err.message;
+      return 'Failed to delete account';
+    };
     try {
       await deleteAccount(deletePassword);
       router.replace('/');
-    } catch (err: any) {
-      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-        setError('Incorrect password');
-      } else {
-        setError(err.message || 'Failed to delete account');
-      }
+    } catch (err: unknown) {
+      setError(formatError(err));
     } finally {
       setDeleting(false);
     }

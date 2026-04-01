@@ -9,10 +9,33 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import Link from 'next/link';
 
 const features = [
-  { icon: '🔒', title: 'Zero exposure', desc: 'Your likes are always private until mutual' },
-  { icon: '✨', title: 'Mutual only', desc: 'Matches only appear when both sides like each other' },
-  { icon: '🏫', title: 'School & class spaces', desc: 'Organized by your school and class' },
+  {
+    icon: '🔒',
+    title: 'Completely private',
+    desc: 'Your likes are invisible until both sides match',
+  },
+  {
+    icon: '💝',
+    title: 'Mutual only',
+    desc: 'Connections only reveal when it goes both ways',
+  },
+  {
+    icon: '🏫',
+    title: 'Class-based',
+    desc: 'Organised by your school and specific classes',
+  },
 ];
+
+const stagger = {
+  container: {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.08 } },
+  },
+  item: {
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+  },
+};
 
 export default function LandingPage() {
   const { user, loading } = useAuth();
@@ -33,102 +56,89 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background */}
-      <div className="fixed inset-0 -z-10">
+    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden">
+      {/* Ambient glows */}
+      <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
         <motion.div
-          className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-pink-500/10 blur-3xl"
-          animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-[5%] right-[10%] h-[480px] w-[480px] rounded-full bg-pink-500/[0.07] blur-[100px]"
+          animate={{ scale: [1, 1.08, 1], opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-purple-500/10 blur-3xl"
-          animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.9, 0.5] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-rose-500/5 blur-3xl"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          className="absolute bottom-[5%] left-[5%] h-[400px] w-[400px] rounded-full bg-violet-500/[0.06] blur-[100px]"
+          animate={{ scale: [1, 1.06, 1], opacity: [0.6, 0.9, 0.6] }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
         />
       </div>
 
-      <div className="w-full max-w-md text-center space-y-10">
-        {/* Hero */}
+      <div className="w-full max-w-[420px]">
         <motion.div
-          initial={{ opacity: 0, scale: 0.85, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="space-y-4"
+          variants={stagger.container}
+          initial="hidden"
+          animate="show"
+          className="space-y-10"
         >
-          <motion.div
-            animate={{ scale: [1, 1.06, 1], rotate: [0, 4, -4, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            className="text-7xl inline-block"
-          >
-            💝
-          </motion.div>
-          <div className="space-y-2">
-            <h1 className="text-5xl font-extrabold tracking-tight bg-gradient-to-br from-pink-300 via-pink-400 to-rose-500 bg-clip-text text-transparent">
-              Likewise
-            </h1>
-            <p className="text-white/50 text-lg font-light">
-              Private. Mutual. Class-based.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Features */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="space-y-2.5"
-        >
-          {features.map((f, i) => (
+          {/* Hero */}
+          <motion.div variants={stagger.item} className="text-center space-y-5">
             <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + i * 0.09, duration: 0.4 }}
-              className="flex items-center gap-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.07] px-4 py-3.5 text-left"
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="text-[72px] leading-none select-none"
             >
-              <span className="text-xl shrink-0">{f.icon}</span>
-              <div>
-                <p className="text-white text-sm font-medium">{f.title}</p>
-                <p className="text-white/40 text-xs mt-0.5">{f.desc}</p>
-              </div>
+              💝
             </motion.div>
-          ))}
-        </motion.div>
+            <div className="space-y-2">
+              <h1 className="text-[3.25rem] font-black tracking-tight gradient-text leading-none">
+                Likewise
+              </h1>
+              <p className="text-white/40 text-lg font-light tracking-wide">
+                Private. Mutual. Class-based.
+              </p>
+            </div>
+          </motion.div>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.45 }}
-          className="space-y-3"
-        >
-          <Link href="/signup" className="block">
-            <Button variant="primary" size="lg" className="w-full text-base font-semibold">
-              Get started free ✨
-            </Button>
-          </Link>
-          <Link href="/login" className="block">
-            <Button variant="secondary" size="lg" className="w-full text-base">
-              Sign in
-            </Button>
-          </Link>
-        </motion.div>
+          {/* Features */}
+          <motion.div variants={stagger.item} className="space-y-2.5">
+            {features.map((f, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.35 + i * 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="flex items-center gap-4 rounded-2xl bg-white/[0.04] border border-white/[0.06] px-4 py-3.5"
+              >
+                <div className="h-10 w-10 rounded-xl bg-white/[0.06] border border-white/[0.07] flex items-center justify-center text-xl shrink-0">
+                  {f.icon}
+                </div>
+                <div>
+                  <p className="text-[0.9375rem] font-semibold text-white">{f.title}</p>
+                  <p className="text-[0.8125rem] text-white/35 mt-0.5">{f.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.75 }}
-          className="text-white/20 text-xs"
-        >
-          Your crushes stay private until it&apos;s mutual 💝
-        </motion.p>
+          {/* CTAs */}
+          <motion.div variants={stagger.item} className="space-y-2.5">
+            <Link href="/signup" className="block">
+              <Button variant="primary" size="lg" className="w-full text-[1.0625rem] font-semibold">
+                Get started free
+              </Button>
+            </Link>
+            <Link href="/login" className="block">
+              <Button variant="secondary" size="lg" className="w-full text-[0.9375rem]">
+                Sign in
+              </Button>
+            </Link>
+          </motion.div>
+
+          <motion.p
+            variants={stagger.item}
+            className="text-center text-white/18 text-[0.75rem]"
+          >
+            Crushes stay private until it&apos;s mutual 💝
+          </motion.p>
+        </motion.div>
       </div>
     </div>
   );

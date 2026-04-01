@@ -7,14 +7,24 @@ interface GlassCardProps extends HTMLMotionProps<'div'> {
   children: React.ReactNode;
   className?: string;
   glow?: boolean;
+  interactive?: boolean;
 }
 
-export const GlassCard = ({ children, className, glow = false, ...props }: GlassCardProps) => {
+export const GlassCard = ({
+  children,
+  className,
+  glow = false,
+  interactive = false,
+  ...props
+}: GlassCardProps) => {
   return (
     <motion.div
+      whileHover={interactive ? { y: -2, scale: 1.005 } : undefined}
+      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       className={cn(
-        'relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-xl',
-        glow && 'shadow-pink-500/20 border-pink-500/20',
+        'relative rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-1)] backdrop-blur-xl',
+        glow && 'shadow-[0_0_40px_rgba(236,72,153,0.12)] border-[var(--border-accent)]',
+        interactive && 'cursor-pointer hover:border-white/[0.13] hover:bg-[var(--surface-2)]',
         className
       )}
       {...props}

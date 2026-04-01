@@ -15,6 +15,10 @@ import {
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { Avatar } from '@/components/ui/Avatar';
+import { Badge } from '@/components/ui/Badge';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Group, Membership, School } from '@/types';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -119,23 +123,28 @@ export default function ClassPage() {
 
   if (!group) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <GlassCard className="p-10 text-center space-y-3 max-w-sm w-full">
-          <div className="text-4xl">🔍</div>
-          <p className="text-white font-semibold">Class not found</p>
-          <p className="text-white/40 text-sm">This class may have been removed or the link is invalid.</p>
-          <Button variant="secondary" size="md" onClick={() => router.push('/dashboard')}>
-            Back to dashboard
-          </Button>
+      <div className="min-h-screen flex items-center justify-center p-5">
+        <GlassCard className="max-w-sm w-full overflow-hidden">
+          <EmptyState
+            icon="🔍"
+            title="Class not found"
+            description="This class may have been removed or the link is invalid."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => router.push('/dashboard')}>
+                Back to home
+              </Button>
+            }
+          />
         </GlassCard>
       </div>
     );
   }
 
   const otherMembers = members.filter((m) => m.userId !== user?.id);
+  const likedCount = otherMembers.filter((m) => likedUserIds.has(m.userId)).length;
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen">
       {confetti && (
         <ReactConfetti
           width={windowSize.width}
@@ -146,126 +155,180 @@ export default function ClassPage() {
         />
       )}
 
-      <div className="max-w-lg mx-auto space-y-5 py-8">
+      <div className="max-w-lg mx-auto px-5 py-8 space-y-6">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3"
-        >
-          <Button variant="ghost" size="sm" onClick={() => router.back()}>←</Button>
-          <div className="flex-1 min-w-0">
-            {school && (
-              <p className="text-xs text-white/30 truncate mb-0.5">🏫 {school.name}</p>
-            )}
-            <h1 className="text-xl font-bold text-white truncate">{group.name}</h1>
-            <p className="text-white/40 text-sm">{members.length} member{members.length !== 1 ? 's' : ''}</p>
-          </div>
-          <Link href={`/class/${id}/matches`}>
-            <Button variant="secondary" size="sm">💝 Matches</Button>
-          </Link>
-        </motion.div>
+        <PageHeader
+          title={group.name}
+          subtitle={`${members.length} member${members.length !== 1 ? 's' : ''}`}
+          back="/dashboard"
+          breadcrumb={school ? [{ label: school.name }] : undefined}
+          actions={
+            <Link href={`/class/${id}/matches`}>
+              <Button variant="secondary" size="sm" className="gap-1.5">
+                <span>💝</span>
+                Matches
+              </Button>
+            </Link>
+          }
+        />
 
-        {/* Invite code card */}
+        {/* Invite code */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
+          transition={{ delay: 0.08, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
           <GlassCard className="p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs text-white/40 mb-1 font-medium uppercase tracking-wider">Invite code</p>
-                <p className="font-mono text-2xl font-bold text-pink-400 tracking-[0.2em]">{group.inviteCode}</p>
+                <p className="text-[0.7rem] text-white/30 uppercase tracking-widest font-medium mb-1.5">
+                  Invite code
+                </p>
+                <p className="font-mono text-[1.6rem] font-bold text-pink-400 tracking-[0.2em] leading-none">
+                  {group.inviteCode}
+                </p>
               </div>
-              <Button variant="secondary" size="sm" onClick={copyInviteCode}>
-                {copied ? '✓ Copied!' : '📋 Copy'}
+              <Button
+                variant={copied ? 'outline' : 'secondary'}
+                size="sm"
+                onClick={copyInviteCode}
+                className="shrink-0"
+              >
+                {copied ? (
+                  <>
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                      <path d="M2 6.5l3.5 3.5L11 3" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                    </svg>
+                    Copy
+                  </>
+                )}
               </Button>
             </div>
           </GlassCard>
         </motion.div>
 
+        {/* Stats row */}
+        {otherMembers.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.3 }}
+            className="flex items-center gap-3"
+          >
+            <div className="flex-1 rounded-[var(--radius-md)] bg-[var(--surface-1)] border border-[var(--border)] p-3 text-center">
+              <p className="text-[1.1875rem] font-bold text-white">{otherMembers.length}</p>
+              <p className="text-[0.7rem] text-white/35 mt-0.5">Classmates</p>
+            </div>
+            <div className="flex-1 rounded-[var(--radius-md)] bg-[var(--surface-1)] border border-[var(--border)] p-3 text-center">
+              <p className="text-[1.1875rem] font-bold text-pink-400">{likedCount}</p>
+              <p className="text-[0.7rem] text-white/35 mt-0.5">Liked</p>
+            </div>
+          </motion.div>
+        )}
+
         {/* Members */}
         <div>
-          <h2 className="text-xs font-medium text-white/40 mb-3 uppercase tracking-wider">
-            Members ({otherMembers.length})
-          </h2>
-          {likeError && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-sm text-red-400 mb-3 text-center"
-            >
-              {likeError}
-            </motion.p>
-          )}
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[0.7rem] font-medium text-white/28 uppercase tracking-widest">
+              Classmates
+            </p>
+            {likeError && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-xs text-red-400"
+              >
+                {likeError}
+              </motion.p>
+            )}
+          </div>
+
           {otherMembers.length === 0 ? (
-            <GlassCard className="p-10 text-center space-y-3">
-              <div className="text-4xl">👋</div>
-              <p className="text-white/50 text-sm">No other members yet.</p>
-              <p className="text-white/30 text-xs">Share the invite code to get people in!</p>
+            <GlassCard className="overflow-hidden">
+              <EmptyState
+                icon="👋"
+                title="No classmates yet"
+                description="Share the invite code to get people into this class"
+              />
             </GlassCard>
           ) : (
-            <div className="grid gap-2.5">
+            <div className="space-y-2">
               {otherMembers.map((member, i) => {
                 const isLiked = likedUserIds.has(member.userId);
                 const isPending = pendingLike === member.userId;
-                const initial = (member.displayUsername || member.username)[0].toUpperCase();
+                const displayName = member.displayUsername || member.username;
 
                 return (
                   <motion.div
                     key={member.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04 }}
+                    transition={{
+                      delay: i * 0.04,
+                      duration: 0.35,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                   >
                     <GlassCard
-                      className={`p-4 transition-all duration-300 ${
-                        isLiked ? 'border-pink-500/30 bg-pink-500/5' : ''
+                      className={`p-4 transition-colors duration-200 ${
+                        isLiked
+                          ? 'border-pink-500/25 bg-pink-500/[0.04]'
+                          : ''
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="relative h-11 w-11 rounded-full bg-gradient-to-br from-pink-500/30 to-purple-500/30 border border-white/10 flex items-center justify-center text-white font-bold text-base shadow-md">
-                            {initial}
-                            {isLiked && (
-                              <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-pink-500 border border-[var(--background)] flex items-center justify-center text-[8px]"
-                              >
-                                ❤
-                              </motion.div>
+                      <div className="flex items-center gap-3.5">
+                        <Avatar name={displayName} size="md" showRing={isLiked} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="font-semibold text-white text-[0.9375rem] truncate">
+                              {displayName}
+                            </p>
+                            {member.role === 'owner' && (
+                              <Badge variant="pink" size="sm">Owner</Badge>
                             )}
                           </div>
-                          <div>
-                            <p className="font-semibold text-white text-sm">
-                              {member.displayUsername || member.username}
-                            </p>
-                            <p className="text-xs text-white/30 mt-0.5 capitalize">{member.role}</p>
-                          </div>
+                          {isLiked && (
+                            <motion.p
+                              initial={{ opacity: 0, y: 2 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="text-[0.7rem] text-pink-400/70 mt-0.5"
+                            >
+                              You liked this person
+                            </motion.p>
+                          )}
                         </div>
+                        {/* Like button */}
                         <motion.button
                           whileTap={{ scale: 0.82 }}
-                          whileHover={{ scale: 1.08 }}
+                          whileHover={{ scale: isPending ? 1 : 1.1 }}
                           onClick={() => handleLike(member)}
                           disabled={isPending}
-                          className={`relative h-10 w-10 rounded-full flex items-center justify-center transition-all duration-200 ${
-                            isLiked
-                              ? 'bg-pink-500/20 border border-pink-500/40 shadow-md shadow-pink-500/20'
-                              : 'bg-white/5 border border-white/10 hover:border-pink-500/30 hover:bg-pink-500/10'
-                          } disabled:opacity-50`}
                           aria-label={isLiked ? 'Unlike' : 'Like'}
+                          className={`relative h-11 w-11 rounded-full flex items-center justify-center transition-colors duration-200 shrink-0 ${
+                            isLiked
+                              ? 'bg-pink-500/20 border border-pink-500/40'
+                              : 'bg-white/[0.05] border border-white/[0.09] hover:border-pink-500/30 hover:bg-pink-500/[0.08]'
+                          } disabled:opacity-50`}
                         >
-                          <motion.span
-                            key={isLiked ? 'liked' : 'unliked'}
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                            className="text-lg"
-                          >
-                            {isPending ? '⏳' : isLiked ? '❤️' : '🤍'}
-                          </motion.span>
+                          <AnimatePresence mode="wait">
+                            <motion.span
+                              key={isPending ? 'pending' : isLiked ? 'liked' : 'unliked'}
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              exit={{ scale: 0, opacity: 0 }}
+                              transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+                              className="text-[1.1rem] select-none"
+                            >
+                              {isPending ? '⏳' : isLiked ? '❤️' : '🤍'}
+                            </motion.span>
+                          </AnimatePresence>
                         </motion.button>
                       </div>
                     </GlassCard>
@@ -284,39 +347,44 @@ export default function ClassPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/70 backdrop-blur-md"
             onClick={() => setShowMatch(null)}
           >
             <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="w-full max-w-sm"
+              initial={{ scale: 0.6, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.85, opacity: 0, y: 10 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+              className="w-full max-w-[340px]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <GlassCard glow className="p-8 text-center space-y-5 border-pink-500/40 bg-pink-500/10">
+              <GlassCard glow className="p-8 text-center space-y-5">
                 <motion.div
-                  animate={{ scale: [1, 1.25, 1], rotate: [0, -12, 12, 0] }}
-                  transition={{ duration: 0.6, delay: 0.15 }}
-                  className="text-7xl"
+                  animate={{ scale: [1, 1.2, 0.95, 1.1, 1], rotate: [0, -10, 10, -5, 0] }}
+                  transition={{ duration: 0.7, delay: 0.1 }}
+                  className="text-[4.5rem] leading-none"
                 >
                   💝
                 </motion.div>
                 <div className="space-y-2">
-                  <h2 className="text-3xl font-extrabold text-white">It&apos;s a Match!</h2>
-                  <p className="text-white/70">
-                    You and <span className="text-pink-400 font-semibold">{showMatch.username}</span> like each other!
+                  <h2 className="text-[1.75rem] font-extrabold text-white tracking-tight">
+                    It&apos;s a match!
+                  </h2>
+                  <p className="text-white/60 text-[0.9375rem] leading-relaxed">
+                    You and{' '}
+                    <span className="text-pink-400 font-semibold">{showMatch.username}</span>{' '}
+                    like each other
                   </p>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2.5 pt-1">
                   <Link href={`/class/${id}/matches`} onClick={() => setShowMatch(null)}>
                     <Button variant="primary" size="md" className="w-full">
-                      See your matches ✨
+                      See your matches
                     </Button>
                   </Link>
                   <button
                     onClick={() => setShowMatch(null)}
-                    className="w-full text-white/40 text-sm hover:text-white/60 transition-colors py-1"
+                    className="w-full text-white/35 text-sm hover:text-white/55 transition-colors py-1"
                   >
                     Continue browsing
                   </button>
@@ -329,3 +397,4 @@ export default function ClassPage() {
     </div>
   );
 }
+

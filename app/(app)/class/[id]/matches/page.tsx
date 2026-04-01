@@ -10,6 +10,9 @@ import { subscribeToMatches } from '@/lib/firestore';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { Avatar } from '@/components/ui/Avatar';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Group, Match } from '@/types';
 
 export default function MatchesPage() {
@@ -47,66 +50,87 @@ export default function MatchesPage() {
   }, [id, user]);
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-lg mx-auto space-y-6 py-8">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.back()}>←</Button>
-          <div>
-            <h1 className="text-xl font-bold text-white">Your Matches 💝</h1>
-            <p className="text-white/40 text-sm">{group?.name}</p>
-          </div>
-        </div>
+    <div className="min-h-screen">
+      <div className="max-w-lg mx-auto px-5 py-8 space-y-7">
+        <PageHeader
+          title="Matches"
+          subtitle={group?.name}
+          back={`/class/${id}`}
+        />
 
         {loading ? (
-          <LoadingSpinner />
+          <div className="flex justify-center py-16">
+            <LoadingSpinner size="lg" />
+          </div>
         ) : matches.length === 0 ? (
-          <GlassCard className="p-10 text-center space-y-3">
-            <div className="text-5xl">🤍</div>
-            <h3 className="text-lg font-semibold text-white">No matches yet</h3>
-            <p className="text-white/40 text-sm">Keep liking members — they might like you back!</p>
+          <GlassCard className="overflow-hidden">
+            <EmptyState
+              icon="🤍"
+              title="No matches yet"
+              description="Keep liking classmates — when it's mutual, they'll appear here"
+              action={
+                <Button variant="secondary" size="sm" onClick={() => router.back()}>
+                  Back to class
+                </Button>
+              }
+            />
           </GlassCard>
         ) : (
           <div className="space-y-3">
+            {/* Header count */}
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-between"
+            >
+              <p className="text-[0.7rem] font-medium text-white/28 uppercase tracking-widest">
+                {matches.length} mutual match{matches.length !== 1 ? 'es' : ''}
+              </p>
+              <p className="text-[0.7rem] text-white/20">Private 🔒</p>
+            </motion.div>
+
             {matches.map((match, i) => (
               <motion.div
                 key={match.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.08, type: 'spring', stiffness: 300, damping: 25 }}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: i * 0.07,
+                  duration: 0.4,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
               >
-                <GlassCard
-                  glow
-                  className="p-5 border-pink-500/20 bg-pink-500/5"
-                >
+                <GlassCard glow className="p-5">
                   <div className="flex items-center gap-4">
                     <motion.div
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                      className="h-14 w-14 rounded-full bg-gradient-to-br from-pink-500/40 to-purple-500/40 border border-pink-500/30 flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-pink-500/20"
+                      animate={{ scale: [1, 1.04, 1] }}
+                      transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4 }}
                     >
-                      {match.otherUsername[0].toUpperCase()}
+                      <Avatar name={match.otherUsername} size="lg" showRing />
                     </motion.div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-white text-lg">{match.otherUsername}</p>
-                      <p className="text-xs text-pink-400 mt-0.5">Mutual match ✨</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-white text-[1.0625rem] truncate">
+                        {match.otherUsername}
+                      </p>
+                      <p className="text-[0.8125rem] text-pink-400/80 mt-0.5 flex items-center gap-1">
+                        <span>✨</span> Mutual match
+                      </p>
                     </div>
-                    <div className="text-2xl">💝</div>
+                    <div className="text-[1.75rem] shrink-0 select-none">💝</div>
                   </div>
                 </GlassCard>
               </motion.div>
             ))}
-          </div>
-        )}
 
-        {!loading && matches.length > 0 && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-center text-white/20 text-xs"
-          >
-            Only mutual matches are shown 🔒
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-center text-white/18 text-[0.7rem] pt-2"
+            >
+              Only mutual matches are shown 🔒
+            </motion.p>
+          </div>
         )}
       </div>
     </div>

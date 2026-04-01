@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { deleteAccount, logOut } from '@/lib/auth';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { Avatar } from '@/components/ui/Avatar';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -23,7 +25,10 @@ export default function SettingsPage() {
     setDeleting(true);
     const formatError = (err: unknown) => {
       const errorLike = err as { code?: string; message?: string };
-      if (errorLike?.code === 'auth/wrong-password' || errorLike?.code === 'auth/invalid-credential') {
+      if (
+        errorLike?.code === 'auth/wrong-password' ||
+        errorLike?.code === 'auth/invalid-credential'
+      ) {
         return 'Incorrect password';
       }
       if (errorLike?.message) return errorLike.message;
@@ -41,105 +46,181 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-lg mx-auto space-y-6 py-8">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.back()}>←</Button>
-          <h1 className="text-xl font-bold text-white">Settings</h1>
-        </div>
+    <div className="min-h-screen">
+      <div className="max-w-lg mx-auto px-5 py-8 space-y-6">
+        <PageHeader title="Settings" back="/dashboard" />
 
-        <GlassCard className="p-5 space-y-2">
-          <p className="text-xs text-white/40 uppercase tracking-wider font-medium">Account</p>
-          <div className="flex items-center gap-3 pt-1">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-pink-500/30 to-purple-500/30 border border-white/10 flex items-center justify-center text-white font-semibold">
-              {user?.username?.[0]?.toUpperCase()}
+        {/* Profile card */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <GlassCard className="p-5">
+            <div className="flex items-center gap-4">
+              <Avatar name={user?.username || '?'} size="lg" />
+              <div>
+                <p className="font-bold text-white text-[1.0625rem]">{user?.username}</p>
+                <p className="text-[0.8125rem] text-white/35 mt-0.5">
+                  {user?.createdAt
+                    ? `Joined ${new Date(user.createdAt).toLocaleDateString('en-US', {
+                        month: 'long',
+                        year: 'numeric',
+                      })}`
+                    : 'Member'}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="font-medium text-white">{user?.username}</p>
-              <p className="text-xs text-white/30">
-                {user?.createdAt ? `Joined ${new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}` : 'Member'}
+          </GlassCard>
+        </motion.div>
+
+        {/* Privacy */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <GlassCard className="overflow-hidden">
+            <div className="px-5 pt-5 pb-3">
+              <p className="text-[0.7rem] font-medium text-white/30 uppercase tracking-widest">
+                Privacy
               </p>
             </div>
-          </div>
-        </GlassCard>
-
-        <GlassCard className="p-5 space-y-3">
-          <p className="text-xs text-white/40 uppercase tracking-wider font-medium">Privacy</p>
-          <div className="space-y-2">
-            <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5">
-              <span className="text-lg mt-0.5">🔒</span>
-              <div>
-                <p className="text-sm font-medium text-white">Matches are private</p>
-                <p className="text-xs text-white/40 mt-0.5">Only mutual matches are ever revealed to either party</p>
-              </div>
+            <div className="divide-y divide-[var(--border)]">
+              {[
+                {
+                  icon: '🔒',
+                  title: 'Matches are private',
+                  desc: 'Only mutual matches are ever revealed to either party',
+                },
+                {
+                  icon: '🙈',
+                  title: 'Zero exposure',
+                  desc: "Nobody can see who you've liked",
+                },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3.5 px-5 py-3.5">
+                  <div className="h-9 w-9 rounded-xl bg-white/[0.05] border border-white/[0.07] flex items-center justify-center text-base shrink-0 mt-0.5">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="text-[0.9375rem] font-medium text-white">{item.title}</p>
+                    <p className="text-[0.8125rem] text-white/35 mt-0.5 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5">
-              <span className="text-lg mt-0.5">🙈</span>
-              <div>
-                <p className="text-sm font-medium text-white">Zero exposure</p>
-                <p className="text-xs text-white/40 mt-0.5">Nobody can see who you&apos;ve liked</p>
-              </div>
-            </div>
-          </div>
-        </GlassCard>
+          </GlassCard>
+        </motion.div>
 
-        <GlassCard className="p-5">
-          <Button
-            variant="secondary"
-            size="md"
-            className="w-full"
-            onClick={() => logOut().then(() => router.replace('/'))}
-          >
-            Sign out
-          </Button>
-        </GlassCard>
-
-        <GlassCard className="p-5 space-y-4 border-red-500/20">
-          <p className="text-xs text-red-400 uppercase tracking-wider font-medium">Danger Zone</p>
-          {!showDeleteConfirm ? (
+        {/* Sign out */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <GlassCard className="p-4">
             <Button
-              variant="danger"
+              variant="secondary"
               size="md"
               className="w-full"
-              onClick={() => setShowDeleteConfirm(true)}
+              onClick={() => logOut().then(() => router.replace('/'))}
             >
-              🗑️ Delete account
+              Sign out
             </Button>
-          ) : (
-            <motion.form
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              onSubmit={handleDeleteAccount}
-              className="space-y-4"
-            >
-              <p className="text-sm text-white/60">
-                This will permanently delete your account and all your likes. This cannot be undone.
-              </p>
-              <Input
-                label="Confirm with your password"
-                type="password"
-                placeholder="••••••••"
-                value={deletePassword}
-                onChange={(e) => setDeletePassword(e.target.value)}
-                required
-              />
-              {error && <p className="text-sm text-red-400">{error}</p>}
-              <div className="flex gap-3">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => { setShowDeleteConfirm(false); setDeletePassword(''); setError(''); }}
-                  className="flex-1"
+          </GlassCard>
+        </motion.div>
+
+        {/* Danger zone */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <GlassCard className="p-5 space-y-4 border-red-500/15">
+            <p className="text-[0.7rem] font-medium text-red-400/70 uppercase tracking-widest">
+              Danger zone
+            </p>
+            <AnimatePresence mode="wait">
+              {!showDeleteConfirm ? (
+                <motion.div
+                  key="delete-btn"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                 >
-                  Cancel
-                </Button>
-                <Button type="submit" variant="danger" loading={deleting} className="flex-1">
-                  Delete forever
-                </Button>
-              </div>
-            </motion.form>
-          )}
-        </GlassCard>
+                  <Button
+                    variant="danger"
+                    size="md"
+                    className="w-full"
+                    onClick={() => setShowDeleteConfirm(true)}
+                  >
+                    Delete account
+                  </Button>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="delete-form"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  onSubmit={handleDeleteAccount}
+                  className="space-y-4 overflow-hidden"
+                >
+                  <p className="text-[0.875rem] text-white/45 leading-relaxed">
+                    This permanently deletes your account and all your likes. This cannot be undone.
+                  </p>
+                  <Input
+                    label="Confirm with your password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={deletePassword}
+                    onChange={(e) => setDeletePassword(e.target.value)}
+                    required
+                  />
+                  <AnimatePresence>
+                    {error && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="bg-red-500/[0.1] border border-red-500/[0.2] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300">
+                          {error}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <div className="flex gap-2.5">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="md"
+                      onClick={() => {
+                        setShowDeleteConfirm(false);
+                        setDeletePassword('');
+                        setError('');
+                      }}
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="danger"
+                      size="md"
+                      loading={deleting}
+                      className="flex-1"
+                    >
+                      Delete forever
+                    </Button>
+                  </div>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </GlassCard>
+        </motion.div>
       </div>
     </div>
   );

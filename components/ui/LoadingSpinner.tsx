@@ -10,22 +10,40 @@ interface LoadingSpinnerProps {
 
 export const LoadingSpinner = ({ size = 'md', className }: LoadingSpinnerProps) => {
   const sizes = {
-    xs: 'h-4 w-4',
-    sm: 'h-5 w-5',
-    md: 'h-8 w-8',
-    lg: 'h-11 w-11',
+    xs: { outer: 'h-4 w-4',   stroke: 3  },
+    sm: { outer: 'h-5 w-5',   stroke: 3  },
+    md: { outer: 'h-9 w-9',   stroke: 2.5 },
+    lg: { outer: 'h-12 w-12', stroke: 2.5 },
   };
+  const s = sizes[size];
 
   return (
     <div className={cn('flex items-center justify-center', className)}>
-      <motion.div
-        className={cn(
-          sizes[size],
-          'rounded-full border-[2.5px] border-[var(--border)] border-t-[var(--pink)]'
-        )}
+      <motion.svg
+        className={s.outer}
+        viewBox="0 0 36 36"
+        fill="none"
         animate={{ rotate: 360 }}
-        transition={{ duration: 0.7, repeat: Infinity, ease: 'linear' }}
-      />
+        transition={{ duration: 0.85, repeat: Infinity, ease: 'linear' }}
+      >
+        {/* Track */}
+        <circle cx="18" cy="18" r="15" stroke="var(--border)" strokeWidth={s.stroke} />
+        {/* Active arc */}
+        <circle
+          cx="18" cy="18" r="15"
+          stroke="url(#spinner-grad)"
+          strokeWidth={s.stroke}
+          strokeLinecap="round"
+          strokeDasharray="60 94"
+          strokeDashoffset="0"
+        />
+        <defs>
+          <linearGradient id="spinner-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stopColor="#f7365e" />
+            <stop offset="100%" stopColor="#f06233" />
+          </linearGradient>
+        </defs>
+      </motion.svg>
     </div>
   );
 };
@@ -36,8 +54,8 @@ export const LoadingDots = ({ className }: { className?: string }) => (
       <motion.div
         key={i}
         className="h-1.5 w-1.5 rounded-full bg-[var(--pink)]"
-        animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.1, 0.8] }}
-        transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2, ease: 'easeInOut' }}
+        animate={{ opacity: [0.3, 1, 0.3], scale: [0.75, 1.15, 0.75] }}
+        transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.18, ease: 'easeInOut' }}
       />
     ))}
   </div>

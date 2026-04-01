@@ -19,13 +19,15 @@ export const GlassCard = ({
 }: GlassCardProps) => {
   return (
     <motion.div
-      whileHover={interactive ? { y: -2, scale: 1.005 } : undefined}
-      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+      whileHover={interactive ? { y: -3, scale: 1.008 } : undefined}
+      transition={{ type: 'spring', stiffness: 320, damping: 22 }}
       className={cn(
-        'relative rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-1)]',
-        'shadow-[var(--shadow-sm)]',
-        glow && 'border-[rgba(247,54,94,0.35)] shadow-[0_0_0_1px_rgba(247,54,94,0.15),var(--shadow-sm)]',
-        interactive && 'cursor-pointer hover:bg-[var(--surface-2)] hover:border-[var(--surface-3)] transition-colors duration-150',
+        'relative rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-1)] shadow-[var(--shadow-sm)]',
+        glow && [
+          'border-[rgba(247,54,94,0.32)]',
+          'shadow-[0_0_0_1px_rgba(247,54,94,0.12),var(--shadow-md)]',
+        ],
+        interactive && 'cursor-pointer hover:bg-[var(--surface-2)] hover:border-[#343450] transition-colors duration-150',
         className
       )}
       {...props}

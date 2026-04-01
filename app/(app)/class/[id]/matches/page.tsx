@@ -15,6 +15,14 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Group, Match } from '@/types';
 
+function HeartIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
+
 export default function MatchesPage() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
@@ -51,7 +59,7 @@ export default function MatchesPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-lg mx-auto px-5 py-8 space-y-7">
+      <div className="max-w-lg mx-auto px-5 py-8 space-y-6">
         <PageHeader
           title="Matches"
           subtitle={group?.name}
@@ -77,48 +85,65 @@ export default function MatchesPage() {
           </GlassCard>
         ) : (
           <div className="space-y-3">
-            {/* Header count */}
+            {/* Header */}
             <motion.div
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.32 }}
               className="flex items-center justify-between"
             >
-              <p className="text-[0.7rem] font-medium text-[var(--text-tertiary)] uppercase tracking-widest">
+              <p className="text-[0.65rem] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.12em]">
                 {matches.length} mutual match{matches.length !== 1 ? 'es' : ''}
               </p>
-              <p className="text-[0.7rem] text-[var(--text-tertiary)]">Private 🔒</p>
+              <span className="text-[0.65rem] text-[var(--text-tertiary)] font-medium flex items-center gap-1">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Private
+              </span>
             </motion.div>
 
             {matches.map((match, i) => (
               <motion.div
                 key={match.id}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: i * 0.07,
-                  duration: 0.4,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+                initial={{ opacity: 0, y: 16, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: i * 0.07, duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
               >
-                <GlassCard glow className="p-5">
-                  <div className="flex items-center gap-4">
-                    <motion.div
-                      animate={{ scale: [1, 1.04, 1] }}
-                      transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4 }}
-                    >
-                      <Avatar name={match.otherUsername} size="lg" showRing />
-                    </motion.div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-white text-[1.0625rem] truncate">
-                        {match.otherUsername}
-                      </p>
-                      <p className="text-[0.8125rem] text-pink-400/80 mt-0.5 flex items-center gap-1">
-                        <span>✨</span> Mutual match
-                      </p>
+                <div className="rounded-[var(--radius-lg)] bg-[var(--surface-1)] border border-[rgba(247,54,94,0.28)] shadow-[0_4px_20px_rgba(247,54,94,0.1)] overflow-hidden">
+                  {/* Top gradient accent */}
+                  <div className="h-[2px] bg-gradient-to-r from-[#f7365e] via-[#c026d3] to-[#7c5cfc]" />
+                  <div className="p-4">
+                    <div className="flex items-center gap-4">
+                      <motion.div
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.35, ease: 'easeInOut' }}
+                      >
+                        <Avatar name={match.otherUsername} size="lg" showRing pulse />
+                      </motion.div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-white text-[1.0625rem] truncate tracking-tight">
+                          {match.otherUsername}
+                        </p>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <HeartIcon className="h-3.5 w-3.5 text-[var(--pink)]" />
+                          <p className="text-[0.8125rem] text-[var(--pink-light)] font-semibold">
+                            Mutual match
+                          </p>
+                        </div>
+                      </div>
+                      <motion.div
+                        animate={{ scale: [1, 1.12, 1], rotate: [0, -5, 5, 0] }}
+                        transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.5 + 0.5, ease: 'easeInOut' }}
+                        className="shrink-0"
+                      >
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#f7365e] to-[#f06233] flex items-center justify-center shadow-[var(--shadow-pink)]">
+                          <HeartIcon className="h-5 w-5 text-white" />
+                        </div>
+                      </motion.div>
                     </div>
-                    <div className="text-[1.75rem] shrink-0 select-none">💝</div>
                   </div>
-                </GlassCard>
+                </div>
               </motion.div>
             ))}
 
@@ -126,9 +151,12 @@ export default function MatchesPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-center text-[var(--text-muted)] text-[0.7rem] pt-2"
+              className="text-center text-[var(--text-muted)] text-[0.7rem] pt-2 flex items-center justify-center gap-1.5"
             >
-              Only mutual matches are shown 🔒
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Only mutual matches are shown
             </motion.p>
           </div>
         )}

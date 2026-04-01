@@ -635,7 +635,7 @@ function BackButton({ onClick, label }: { onClick: () => void; label: string }) 
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-1.5 text-[0.8125rem] text-[var(--text-secondary)] hover:text-white/65 transition-colors"
+      className="flex items-center gap-1.5 text-[0.8125rem] text-[var(--text-secondary)] hover:text-white transition-colors"
     >
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M9 10.5L5.5 7 9 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

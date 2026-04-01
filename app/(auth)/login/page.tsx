@@ -19,7 +19,10 @@ export default function LoginPage() {
 
   const getErrorMessage = (err: unknown) => {
     const errorLike = err as { code?: string; message?: string };
-    if (errorLike?.code === 'auth/invalid-credential' || errorLike?.code === 'auth/wrong-password') {
+    if (
+      errorLike?.code === 'auth/invalid-credential' ||
+      errorLike?.code === 'auth/wrong-password'
+    ) {
       return 'Invalid username or password';
     }
     if (errorLike?.code === 'auth/too-many-requests') {
@@ -34,7 +37,6 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
       await signIn(username.trim(), password);
       router.replace('/dashboard');
@@ -46,34 +48,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <motion.div
-        className="absolute inset-0 -z-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(236,72,153,0.12),transparent),radial-gradient(circle_at_80%_10%,rgba(124,58,237,0.08),transparent)] blur-3xl" />
-      </motion.div>
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center p-5">
+      <div className="w-full max-w-[380px]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-6"
         >
-          <GlassCard className="p-8 space-y-6 shadow-[0_20px_80px_rgba(236,72,153,0.12)]">
-            <div className="text-center space-y-2">
-              <motion.div
-                animate={{ scale: [1, 1.08, 1], rotate: [0, 6, -6, 0] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-                className="text-4xl"
-              >
-                💝
-              </motion.div>
-              <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-              <p className="text-white/50 text-sm">Sign in to your account</p>
-            </div>
+          {/* Logo */}
+          <div className="text-center space-y-1 pb-2">
+            <motion.div
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="text-5xl"
+            >
+              💝
+            </motion.div>
+            <h1 className="text-2xl font-bold text-white mt-3">Welcome back</h1>
+            <p className="text-[var(--text-secondary)] text-sm">Sign in to continue</p>
+          </div>
 
+          <GlassCard className="p-7">
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
                 label="Username"
@@ -96,14 +92,16 @@ export default function LoginPage() {
 
               <AnimatePresence>
                 {error && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    className="text-sm text-red-400 text-center"
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden"
                   >
-                    {error}
-                  </motion.p>
+                    <div className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-400">
+                      {error}
+                    </div>
+                  </motion.div>
                 )}
               </AnimatePresence>
 
@@ -113,19 +111,22 @@ export default function LoginPage() {
                 size="lg"
                 loading={loading}
                 disabled={!canSubmit}
-                className="w-full mt-2"
+                className="w-full mt-1"
               >
-                Sign In
+                Sign in
               </Button>
             </form>
-
-            <p className="text-center text-sm text-white/40">
-              Don&apos;t have an account?{' '}
-              <Link href="/signup" className="text-pink-400 hover:text-pink-300 transition-colors">
-                Sign up
-              </Link>
-            </p>
           </GlassCard>
+
+          <p className="text-center text-sm text-[var(--text-secondary)]">
+            Don&apos;t have an account?{' '}
+            <Link
+              href="/signup"
+              className="text-[var(--pink-light)] hover:text-white transition-colors font-medium"
+            >
+              Sign up
+            </Link>
+          </p>
         </motion.div>
       </div>
     </div>

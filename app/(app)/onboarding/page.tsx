@@ -9,6 +9,7 @@ import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { StepIndicator } from '@/components/ui/StepIndicator';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { School } from '@/types';
 import dynamic from 'next/dynamic';
 
@@ -17,6 +18,7 @@ const ReactConfetti = dynamic(() => import('react-confetti'), { ssr: false });
 type OnboardingAction = 'create-school' | 'select-school' | null;
 type ClassAction = 'create' | 'join' | null;
 
+// Step -1 is the welcome screen (not counted in StepIndicator)
 const STEPS = [
   { label: 'School', icon: '🏫' },
   { label: 'Class', icon: '🎓' },
@@ -25,13 +27,18 @@ const STEPS = [
 
 const slideVariants = {
   enter: (dir: number) => ({
-    x: dir > 0 ? 60 : -60,
+    x: dir > 0 ? 48 : -48,
     opacity: 0,
   }),
-  center: { x: 0, opacity: 1 },
+  center: {
+    x: 0,
+    opacity: 1,
+    transition: { type: 'spring' as const, stiffness: 320, damping: 30 },
+  },
   exit: (dir: number) => ({
-    x: dir > 0 ? -60 : 60,
+    x: dir > 0 ? -48 : 48,
     opacity: 0,
+    transition: { duration: 0.2 },
   }),
 };
 
@@ -39,7 +46,8 @@ export default function OnboardingPage() {
   const { user } = useAuth();
   const router = useRouter();
 
-  const [step, setStep] = useState(0);
+  // step -1 = welcome, 0 = school, 1 = class, 2 = done
+  const [step, setStep] = useState(-1);
   const [direction, setDirection] = useState(1);
 
   // School step state
@@ -147,56 +155,88 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden">
       {confetti && (
         <ReactConfetti
           width={typeof window !== 'undefined' ? window.innerWidth : 400}
           height={typeof window !== 'undefined' ? window.innerHeight : 800}
           colors={['#f43f5e', '#ec4899', '#a855f7', '#6366f1', '#fff']}
           recycle={false}
-          numberOfPieces={220}
+          numberOfPieces={200}
         />
       )}
 
-      {/* Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute -top-60 -right-60 h-[500px] w-[500px] rounded-full bg-pink-500/8 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-purple-500/8 blur-3xl" />
-        <motion.div
-          className="absolute top-1/3 left-1/4 h-64 w-64 rounded-full bg-rose-500/5 blur-3xl"
-          animate={{ x: [0, 20, 0], y: [0, -15, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
+      {/* No background glow — solid layout */}
 
-      <div className="w-full max-w-md space-y-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="text-center space-y-1"
-        >
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            {step === 0 ? 'Set up your school' : step === 1 ? 'Join or create a class' : "You're all set 🎉"}
-          </h1>
-          <p className="text-white/40 text-sm">
-            {step === 0
-              ? 'Schools group your classes together'
-              : step === 1
-              ? selectedSchool
-                ? `Under ${selectedSchool.name}`
-                : 'Enter with an invite code or create new'
-              : 'Time to connect with your classmates'}
-          </p>
-        </motion.div>
-
-        {/* Step indicator */}
-        <StepIndicator steps={STEPS} currentStep={step} />
+      <div className="w-full max-w-md space-y-7">
+        {/* Header row */}
+        <AnimatePresence mode="wait">
+          {step === -1 ? (
+            <motion.div
+              key="welcome-header"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-center"
+            >
+              <h1 className="text-2xl font-bold text-white">Welcome to Likewise</h1>
+              <p className="text-[var(--text-secondary)] text-sm mt-1">Here&apos;s how it works</p>
+            </motion.div>
+          ) : step < 2 ? (
+            <motion.div
+              key="step-header"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-4"
+            >
+              <div>
+                <h1 className="text-2xl font-bold text-white">
+                  {step === 0 ? 'Set up your school' : 'Join or create a class'}
+                </h1>
+                <p className="text-[var(--text-secondary)] text-sm mt-1">
+                  {step === 0
+                    ? 'Schools group your classes together'
+                    : selectedSchool
+                    ? `Under ${selectedSchool.name}`
+                    : 'Enter a code or start a new one'}
+                </p>
+              </div>
+              <StepIndicator steps={STEPS} currentStep={step} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="done-header"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-4"
+            >
+              <div className="text-center">
+                <h1 className="text-2xl font-bold text-white">You&apos;re all set! 🎉</h1>
+                <p className="text-[var(--text-secondary)] text-sm mt-1">Time to meet your classmates</p>
+              </div>
+              <StepIndicator steps={STEPS} currentStep={step} />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Step content */}
         <div className="relative overflow-hidden">
           <AnimatePresence custom={direction} mode="wait">
+            {step === -1 && (
+              <motion.div
+                key="welcome"
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+              >
+                <WelcomeStep onContinue={() => goTo(0)} />
+              </motion.div>
+            )}
+
             {step === 0 && (
               <motion.div
                 key="step-school"
@@ -205,7 +245,6 @@ export default function OnboardingPage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ type: 'spring', stiffness: 300, damping: 28 }}
               >
                 <SchoolStep
                   schoolAction={schoolAction}
@@ -230,7 +269,6 @@ export default function OnboardingPage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ type: 'spring', stiffness: 300, damping: 28 }}
               >
                 <ClassStep
                   classAction={classAction}
@@ -256,7 +294,6 @@ export default function OnboardingPage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ type: 'spring', stiffness: 300, damping: 28 }}
               >
                 <DoneStep
                   schoolName={selectedSchool?.name}
@@ -272,7 +309,47 @@ export default function OnboardingPage() {
   );
 }
 
-// ─── Sub-step components ────────────────────────────────────────────
+// ─── Welcome Step ────────────────────────────────────────────────────────────
+
+function WelcomeStep({ onContinue }: { onContinue: () => void }) {
+  return (
+    <GlassCard className="overflow-hidden">
+      <div className="p-7 space-y-6">
+        <div className="space-y-4">
+          {[
+            { icon: '🏫', title: 'Join a school', desc: 'Your school groups everything under one roof' },
+            { icon: '🎓', title: 'Enter a class', desc: 'Classes let you connect with specific classmates' },
+            { icon: '💝', title: 'Like privately', desc: 'Only mutual likes ever become visible — to both sides' },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 + i * 0.08, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="flex items-start gap-4"
+            >
+              <div className="h-11 w-11 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-xl shrink-0 mt-0.5">
+                {item.icon}
+              </div>
+              <div>
+                <p className="font-semibold text-white text-[0.9375rem]">{item.title}</p>
+                <p className="text-sm text-[var(--text-secondary)] mt-0.5 leading-relaxed">{item.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="pt-1">
+          <Button variant="primary" size="lg" className="w-full" onClick={onContinue}>
+            Let&apos;s get started
+          </Button>
+        </div>
+      </div>
+    </GlassCard>
+  );
+}
+
+// ─── School Step ─────────────────────────────────────────────────────────────
 
 function SchoolStep({
   schoolAction,
@@ -300,21 +377,18 @@ function SchoolStep({
   if (!schoolAction) {
     return (
       <GlassCard className="p-6 space-y-4">
-        <div className="text-center space-y-2 pb-2">
-          <div className="text-4xl">🏫</div>
-          <p className="text-white/60 text-sm">How would you like to get started?</p>
-        </div>
-        <div className="grid gap-3">
-          <ActionCard
+        <p className="text-[var(--text-secondary)] text-sm">How would you like to get started?</p>
+        <div className="space-y-2.5">
+          <OptionCard
             icon="✨"
             title="Create a new school"
-            description="Set up a new school and add classes"
+            description="Set up a school and add classes to it"
             onClick={() => onActionSelect('create-school')}
           />
-          <ActionCard
+          <OptionCard
             icon="🔍"
             title="Use an existing school"
-            description="You're already part of a school"
+            description="You&apos;re already part of a school"
             onClick={() => onActionSelect('select-school')}
           />
         </div>
@@ -325,31 +399,21 @@ function SchoolStep({
   if (schoolAction === 'create-school') {
     return (
       <GlassCard className="p-6 space-y-5">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => onActionSelect(null)}
-            className="text-white/40 hover:text-white/70 transition-colors text-sm"
-          >
-            ← Back
-          </button>
-          <h2 className="text-lg font-semibold text-white">Create your school</h2>
-        </div>
+        <BackButton onClick={() => onActionSelect(null)} label="Choose option" />
         <form onSubmit={onCreateSchool} className="space-y-4">
           <Input
             label="School name"
-            placeholder="e.g. Westview High, MIT, BCA Batch 2025..."
+            placeholder="e.g. Westview High, MIT, BCA Batch 2025…"
             value={schoolName}
             onChange={(e) => onSchoolNameChange(e.target.value)}
             required
             autoFocus
           />
           {schoolError && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-400">
-              {schoolError}
-            </motion.p>
+            <ErrorNote>{schoolError}</ErrorNote>
           )}
           <Button type="submit" variant="primary" size="lg" loading={submitting} className="w-full">
-            Create School →
+            Create school
           </Button>
         </form>
       </GlassCard>
@@ -359,31 +423,22 @@ function SchoolStep({
   // select-school
   return (
     <GlassCard className="p-6 space-y-4">
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => onActionSelect(null)}
-          className="text-white/40 hover:text-white/70 transition-colors text-sm"
-        >
-          ← Back
-        </button>
-        <h2 className="text-lg font-semibold text-white">Your schools</h2>
-      </div>
+      <BackButton onClick={() => onActionSelect(null)} label="Choose option" />
       {loadingSchools ? (
-        <div className="flex justify-center py-6">
-          <svg className="animate-spin h-6 w-6 text-pink-400" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
+        <div className="flex justify-center py-8">
+          <LoadingSpinner />
         </div>
       ) : existingSchools.length === 0 ? (
-        <div className="text-center py-6 space-y-2">
-          <p className="text-white/40 text-sm">No schools found.</p>
-          <button
-            className="text-pink-400 text-sm hover:text-pink-300 transition-colors"
+        <div className="text-center py-8 space-y-3">
+          <p className="text-4xl">🏫</p>
+          <p className="text-[var(--text-secondary)] text-sm">No schools found.</p>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => onActionSelect('create-school')}
           >
-            Create one instead →
-          </button>
+            Create one instead
+          </Button>
         </div>
       ) : (
         <div className="space-y-2">
@@ -393,25 +448,28 @@ function SchoolStep({
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
               onClick={() => onSelectSchool(school)}
-              className="w-full text-left px-4 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-pink-500/30 transition-all"
+              className="w-full text-left px-4 py-3.5 rounded-[var(--radius-md)] bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface-3)] hover:border-[var(--border-accent)] transition-colors"
             >
               <div className="flex items-center gap-3">
-                <span className="text-2xl">🏫</span>
+                <div className="h-9 w-9 rounded-xl bg-[var(--surface-2)] flex items-center justify-center text-lg shrink-0">🏫</div>
                 <div>
-                  <p className="font-medium text-white text-sm">{school.name}</p>
-                  <p className="text-xs text-white/30 mt-0.5">Tap to select</p>
+                  <p className="font-semibold text-white text-[0.9375rem]">{school.name}</p>
+                  <p className="text-xs text-[var(--text-tertiary)] mt-0.5">Tap to select</p>
                 </div>
+                <svg className="ml-auto text-[var(--text-tertiary)]" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
             </motion.button>
           ))}
         </div>
       )}
-      {schoolError && (
-        <p className="text-sm text-red-400 text-center">{schoolError}</p>
-      )}
+      {schoolError && <ErrorNote>{schoolError}</ErrorNote>}
     </GlassCard>
   );
 }
+
+// ─── Class Step ───────────────────────────────────────────────────────────────
 
 function ClassStep({
   classAction,
@@ -441,24 +499,16 @@ function ClassStep({
   if (!classAction) {
     return (
       <GlassCard className="p-6 space-y-4">
-        <div className="flex items-center gap-3 pb-1">
-          <button
-            onClick={onBack}
-            className="text-white/40 hover:text-white/70 transition-colors text-sm"
-          >
-            ← Back
-          </button>
-          <div className="text-4xl">🎓</div>
-        </div>
-        <p className="text-white/60 text-sm">What would you like to do with this class?</p>
-        <div className="grid gap-3">
-          <ActionCard
+        <BackButton onClick={onBack} label="School" />
+        <p className="text-[var(--text-secondary)] text-sm">What would you like to do?</p>
+        <div className="space-y-2.5">
+          <OptionCard
             icon="✨"
             title="Create a class"
             description="Start a new class and invite people"
             onClick={() => onActionSelect('create')}
           />
-          <ActionCard
+          <OptionCard
             icon="🔗"
             title="Join with invite code"
             description="Enter a code shared by a classmate"
@@ -471,22 +521,12 @@ function ClassStep({
 
   return (
     <GlassCard className="p-6 space-y-5">
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => onActionSelect(null)}
-          className="text-white/40 hover:text-white/70 transition-colors text-sm"
-        >
-          ← Back
-        </button>
-        <h2 className="text-lg font-semibold text-white">
-          {classAction === 'create' ? 'Name your class' : 'Enter invite code'}
-        </h2>
-      </div>
+      <BackButton onClick={() => onActionSelect(null)} label="Choose option" />
       <form onSubmit={classAction === 'create' ? onCreateClass : onJoinClass} className="space-y-4">
         {classAction === 'create' ? (
           <Input
             label="Class name"
-            placeholder="e.g. CS101, Physics A, Math Olympiad..."
+            placeholder="e.g. CS101, Physics A, Math Olympiad…"
             value={className}
             onChange={(e) => onClassNameChange(e.target.value)}
             required
@@ -498,24 +538,22 @@ function ClassStep({
             placeholder="ABC123"
             value={inviteCode}
             onChange={(e) => onInviteCodeChange(e.target.value.toUpperCase())}
-            className="font-mono tracking-widest text-center uppercase text-xl"
+            className="font-mono tracking-[0.25em] text-center text-xl uppercase"
             maxLength={6}
             required
             autoFocus
           />
         )}
-        {classError && (
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-400">
-            {classError}
-          </motion.p>
-        )}
+        {classError && <ErrorNote>{classError}</ErrorNote>}
         <Button type="submit" variant="primary" size="lg" loading={submitting} className="w-full">
-          {classAction === 'create' ? 'Create Class →' : 'Join Class →'}
+          {classAction === 'create' ? 'Create class' : 'Join class'}
         </Button>
       </form>
     </GlassCard>
   );
 }
+
+// ─── Done Step ────────────────────────────────────────────────────────────────
 
 function DoneStep({
   schoolName,
@@ -527,11 +565,11 @@ function DoneStep({
   onEnter: () => void;
 }) {
   return (
-    <GlassCard glow className="p-8 text-center space-y-6 border-pink-500/30 bg-pink-500/5">
+    <GlassCard glow className="p-8 text-center space-y-6">
       <motion.div
-        initial={{ scale: 0, rotate: -20 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.1 }}
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.08 }}
         className="text-6xl"
       >
         🎉
@@ -539,26 +577,26 @@ function DoneStep({
       <div className="space-y-2">
         <h2 className="text-2xl font-bold text-white">You&apos;re in!</h2>
         {schoolName && (
-          <p className="text-white/50 text-sm">
-            <span className="text-white/80">{schoolName}</span> · <span className="text-pink-400">{className}</span>
+          <p className="text-[var(--text-secondary)] text-sm">
+            <span className="text-white font-medium">{schoolName}</span>
+            <span className="mx-1.5 text-[var(--text-tertiary)]">·</span>
+            <span className="text-pink-400 font-medium">{className}</span>
           </p>
         )}
-        <p className="text-white/40 text-sm">Start connecting with your classmates 💝</p>
+        <p className="text-[var(--text-secondary)] text-sm">Start connecting with your classmates</p>
       </div>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         <Button variant="primary" size="lg" onClick={onEnter} className="w-full">
-          Enter class ✨
+          Enter class
         </Button>
       </motion.div>
     </GlassCard>
   );
 }
 
-function ActionCard({
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function OptionCard({
   icon,
   title,
   description,
@@ -571,21 +609,50 @@ function ActionCard({
 }) {
   return (
     <motion.button
-      whileHover={{ scale: 1.015, y: -1 }}
-      whileTap={{ scale: 0.985 }}
+      whileHover={{ scale: 1.01, y: -1 }}
+      whileTap={{ scale: 0.99 }}
       onClick={onClick}
-      className="w-full text-left px-4 py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-pink-500/30 transition-all group"
+      className="w-full text-left px-4 py-4 rounded-[var(--radius-md)] bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface-3)] hover:border-[var(--border-accent)] transition-colors group"
     >
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-xl group-hover:bg-pink-500/20 transition-colors">
+      <div className="flex items-center gap-3.5">
+        <div className="h-10 w-10 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-xl shrink-0 group-hover:border-[var(--pink)] transition-colors">
           {icon}
         </div>
-        <div>
-          <p className="font-semibold text-white text-sm">{title}</p>
-          <p className="text-xs text-white/40 mt-0.5">{description}</p>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-white text-[0.9375rem] leading-tight">{title}</p>
+          <p className="text-[0.8125rem] text-[var(--text-secondary)] mt-0.5">{description}</p>
         </div>
-        <span className="ml-auto text-white/20 group-hover:text-white/50 transition-colors">→</span>
+        <svg className="text-[var(--text-tertiary)] group-hover:text-[var(--text-secondary)] transition-colors shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
       </div>
     </motion.button>
+  );
+}
+
+function BackButton({ onClick, label }: { onClick: () => void; label: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex items-center gap-1.5 text-[0.8125rem] text-[var(--text-secondary)] hover:text-white transition-colors"
+    >
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M9 10.5L5.5 7 9 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+      {label}
+    </button>
+  );
+}
+
+function ErrorNote({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300"
+    >
+      {children}
+    </motion.div>
   );
 }

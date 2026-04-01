@@ -16,45 +16,66 @@ interface StepIndicatorProps {
 
 export const StepIndicator = ({ steps, currentStep, className }: StepIndicatorProps) => {
   return (
-    <div className={cn('flex items-center justify-center gap-0', className)}>
+    <div className={cn('flex items-center', className)}>
       {steps.map((step, index) => {
         const isCompleted = index < currentStep;
         const isActive = index === currentStep;
 
         return (
-          <div key={index} className="flex items-center">
-            <div className="flex flex-col items-center gap-1.5">
+          <div key={index} className="flex items-center flex-1 last:flex-none">
+            <div className="flex flex-col items-center gap-1.5 shrink-0">
               <motion.div
                 animate={{
-                  scale: isActive ? 1.1 : 1,
-                  backgroundColor: isCompleted
-                    ? 'rgba(236,72,153,0.9)'
+                  background: isCompleted
+                    ? 'linear-gradient(135deg, #f7365e, #f06233)'
                     : isActive
-                    ? 'rgba(236,72,153,0.2)'
-                    : 'rgba(255,255,255,0.06)',
-                  borderColor: isCompleted || isActive
-                    ? 'rgba(236,72,153,0.6)'
-                    : 'rgba(255,255,255,0.12)',
+                    ? 'rgba(247,54,94,0.18)'
+                    : 'rgba(255,255,255,0.04)',
+                  borderColor: isCompleted
+                    ? 'rgba(247,54,94,0.7)'
+                    : isActive
+                    ? 'rgba(247,54,94,0.55)'
+                    : 'rgba(255,255,255,0.08)',
+                  scale: isActive ? 1.1 : 1,
+                  boxShadow: isActive
+                    ? '0 0 0 4px rgba(247,54,94,0.15)'
+                    : '0 0 0 0px rgba(247,54,94,0)',
                 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="h-9 w-9 rounded-full border flex items-center justify-center text-base shadow-lg"
+                transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                className="h-9 w-9 rounded-full border-2 flex items-center justify-center text-sm"
               >
                 {isCompleted ? (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                  <motion.svg
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 16 }}
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
                   >
-                    ✓
-                  </motion.span>
+                    <path
+                      d="M2 6l3 3 5-5"
+                      stroke="white"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </motion.svg>
                 ) : (
-                  <span className={isActive ? 'opacity-100' : 'opacity-30'}>{step.icon}</span>
+                  <span className={cn('text-sm', isActive ? 'opacity-100' : 'opacity-30')}>
+                    {step.icon}
+                  </span>
                 )}
               </motion.div>
               <span
                 className={cn(
-                  'text-[10px] font-medium transition-colors',
-                  isActive ? 'text-pink-400' : isCompleted ? 'text-white/60' : 'text-white/20'
+                  'text-[0.625rem] font-semibold transition-colors whitespace-nowrap tracking-wide',
+                  isActive
+                    ? 'text-[var(--pink-light)]'
+                    : isCompleted
+                    ? 'text-[var(--text-tertiary)]'
+                    : 'text-[var(--text-muted)]'
                 )}
               >
                 {step.label}
@@ -62,12 +83,11 @@ export const StepIndicator = ({ steps, currentStep, className }: StepIndicatorPr
             </div>
 
             {index < steps.length - 1 && (
-              <div className="relative mx-2 mb-4 h-px w-10">
-                <div className="absolute inset-0 bg-white/10 rounded-full" />
+              <div className="relative flex-1 h-[2px] mx-2 mb-4 rounded-full overflow-hidden bg-[var(--surface-3)]">
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full origin-left"
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-[#f7365e] to-[#c026d3] origin-left"
                   animate={{ scaleX: isCompleted ? 1 : 0 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 />
               </div>
             )}

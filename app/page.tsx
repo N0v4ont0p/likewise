@@ -9,19 +9,41 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import Link from 'next/link';
 
 const features = [
-  { icon: '🔒', title: 'Zero exposure', desc: 'Your likes are always private until mutual' },
-  { icon: '✨', title: 'Mutual only', desc: 'Matches only appear when both sides like each other' },
-  { icon: '🏫', title: 'School & class spaces', desc: 'Organized by your school and class' },
+  {
+    icon: '🔒',
+    color: '#f7365e',
+    title: 'Completely private',
+    desc: 'Your likes are invisible until both sides match',
+  },
+  {
+    icon: '💝',
+    color: '#7c5cfc',
+    title: 'Mutual only',
+    desc: 'Connections only reveal when it goes both ways',
+  },
+  {
+    icon: '🏫',
+    color: '#10b981',
+    title: 'Class-based',
+    desc: 'Organised by your school and specific classes',
+  },
 ];
+
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
+};
 
 export default function LandingPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && user) {
-      router.replace('/dashboard');
-    }
+    if (!loading && user) router.replace('/dashboard');
   }, [user, loading, router]);
 
   if (loading) {
@@ -33,102 +55,104 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background */}
-      <div className="fixed inset-0 -z-10">
-        <motion.div
-          className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-pink-500/10 blur-3xl"
-          animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-purple-500/10 blur-3xl"
-          animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.9, 0.5] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-rose-500/5 blur-3xl"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        />
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-5 dot-grid relative">
+      {/* Subtle top/bottom gradient fade over dot grid */}
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-[var(--bg)] via-transparent to-[var(--bg)]" aria-hidden="true" />
 
-      <div className="w-full max-w-md text-center space-y-10">
-        {/* Hero */}
+      <div className="w-full max-w-[420px] relative">
         <motion.div
-          initial={{ opacity: 0, scale: 0.85, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="space-y-4"
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="space-y-8"
         >
-          <motion.div
-            animate={{ scale: [1, 1.06, 1], rotate: [0, 4, -4, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            className="text-7xl inline-block"
-          >
-            💝
-          </motion.div>
-          <div className="space-y-2">
-            <h1 className="text-5xl font-extrabold tracking-tight bg-gradient-to-br from-pink-300 via-pink-400 to-rose-500 bg-clip-text text-transparent">
-              Likewise
-            </h1>
-            <p className="text-white/50 text-lg font-light">
-              Private. Mutual. Class-based.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Features */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="space-y-2.5"
-        >
-          {features.map((f, i) => (
+          {/* ── Hero ── */}
+          <motion.div variants={item} className="text-center space-y-4">
+            {/* Animated heart logo */}
             <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + i * 0.09, duration: 0.4 }}
-              className="flex items-center gap-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.07] px-4 py-3.5 text-left"
+              className="inline-flex items-center justify-center"
+              animate={{ y: [0, -7, 0] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <span className="text-xl shrink-0">{f.icon}</span>
-              <div>
-                <p className="text-white text-sm font-medium">{f.title}</p>
-                <p className="text-white/40 text-xs mt-0.5">{f.desc}</p>
-              </div>
+              <motion.div
+                className="h-20 w-20 rounded-[28px] bg-gradient-to-br from-[#f7365e] to-[#f06233] flex items-center justify-center shadow-[var(--shadow-pink)]"
+                animate={{ rotate: [0, -2, 2, -1, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+              >
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </motion.div>
             </motion.div>
-          ))}
-        </motion.div>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.45 }}
-          className="space-y-3"
-        >
-          <Link href="/signup" className="block">
-            <Button variant="primary" size="lg" className="w-full text-base font-semibold">
-              Get started free ✨
-            </Button>
-          </Link>
-          <Link href="/login" className="block">
-            <Button variant="secondary" size="lg" className="w-full text-base">
-              Sign in
-            </Button>
-          </Link>
-        </motion.div>
+            <div className="space-y-2">
+              <h1 className="text-[3.5rem] font-black tracking-tight leading-none gradient-text-animated">
+                Likewise
+              </h1>
+              <motion.p
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="text-[var(--text-secondary)] text-lg font-light tracking-wide"
+              >
+                Private. Mutual. Class-based.
+              </motion.p>
+            </div>
+          </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.75 }}
-          className="text-white/20 text-xs"
-        >
-          Your crushes stay private until it&apos;s mutual 💝
-        </motion.p>
+          {/* ── Features ── */}
+          <motion.div variants={item} className="space-y-2">
+            {features.map((f, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.32 + i * 0.09, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                className="group flex items-center gap-4 rounded-[var(--radius-lg)] bg-[var(--surface-1)] border border-[var(--border)] px-4 py-4 shadow-[var(--shadow-sm)] overflow-hidden relative"
+              >
+                {/* Left accent line */}
+                <div
+                  className="absolute left-0 top-0 bottom-0 w-[3px] rounded-full"
+                  style={{ background: f.color }}
+                />
+                <div
+                  className="h-11 w-11 rounded-xl flex items-center justify-center text-xl shrink-0 shadow-sm"
+                  style={{ background: `${f.color}1a`, border: `1px solid ${f.color}33` }}
+                >
+                  {f.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[0.9375rem] font-semibold text-white">{f.title}</p>
+                  <p className="text-[0.8125rem] text-[var(--text-secondary)] mt-0.5 leading-snug">{f.desc}</p>
+                </div>
+                <svg className="text-[var(--text-muted)] shrink-0 group-hover:text-[var(--text-tertiary)] transition-colors" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M5 2.5l4.5 4.5L5 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* ── CTAs ── */}
+          <motion.div variants={item} className="space-y-2.5">
+            <Link href="/signup" className="block">
+              <Button variant="primary" size="lg" className="w-full text-[1.0625rem] font-bold tracking-tight">
+                Get started free →
+              </Button>
+            </Link>
+            <Link href="/login" className="block">
+              <Button variant="secondary" size="lg" className="w-full text-[0.9375rem]">
+                I already have an account
+              </Button>
+            </Link>
+          </motion.div>
+
+          <motion.p
+            variants={item}
+            className="text-center text-[var(--text-muted)] text-[0.75rem]"
+          >
+            Crushes stay private until it&apos;s mutual 💝
+          </motion.p>
+        </motion.div>
       </div>
     </div>
   );

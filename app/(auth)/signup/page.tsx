@@ -76,12 +76,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden">
-      {/* Glow */}
-      <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-fuchsia-500/[0.05] blur-[120px]" />
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center p-5">
       <div className="w-full max-w-[380px]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -99,7 +94,7 @@ export default function SignupPage() {
               💝
             </motion.div>
             <h1 className="text-2xl font-bold text-white mt-3">Create account</h1>
-            <p className="text-white/38 text-sm">Join Likewise for free</p>
+            <p className="text-[var(--text-secondary)] text-sm">Join Likewise for free</p>
           </div>
 
           <GlassCard className="p-7">
@@ -142,13 +137,13 @@ export default function SignupPage() {
                               className={`h-[3px] flex-1 rounded-full transition-all duration-300 ${
                                 i < passwordStrength
                                   ? strengthColors[passwordStrength - 1]
-                                  : 'bg-white/[0.08]'
+                                  : 'bg-[var(--border)]'
                               }`}
                             />
                           ))}
                         </div>
                         {passwordStrength > 0 && (
-                          <p className="text-[0.7rem] text-white/35">
+                          <p className="text-[0.7rem] text-[var(--text-tertiary)]">
                             {strengthLabels[passwordStrength - 1]}
                           </p>
                         )}
@@ -159,12 +154,12 @@ export default function SignupPage() {
                           <div key={i} className="flex items-center gap-1.5">
                             <div
                               className={`h-1.5 w-1.5 rounded-full flex-shrink-0 transition-colors ${
-                                req.test(password) ? 'bg-emerald-400' : 'bg-white/15'
+                                req.test(password) ? 'bg-emerald-400' : 'bg-[var(--surface-3)]'
                               }`}
                             />
                             <span
                               className={`text-[0.7rem] transition-colors ${
-                                req.test(password) ? 'text-emerald-400' : 'text-white/25'
+                                req.test(password) ? 'text-emerald-400' : 'text-[var(--text-muted)]'
                               }`}
                             >
                               {req.label}
@@ -201,11 +196,11 @@ export default function SignupPage() {
                     className="overflow-hidden"
                   >
                     {error ? (
-                      <div className="bg-red-500/[0.1] border border-red-500/[0.2] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300">
+                      <div className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-400">
                         {error}
                       </div>
                     ) : (
-                      <p className="text-sm text-white/40 text-center">{statusHint}</p>
+                      <p className="text-sm text-[var(--text-secondary)] text-center">{statusHint}</p>
                     )}
                   </motion.div>
                 )}
@@ -224,11 +219,11 @@ export default function SignupPage() {
             </form>
           </GlassCard>
 
-          <p className="text-center text-sm text-white/35">
+          <p className="text-center text-sm text-[var(--text-secondary)]">
             Already have an account?{' '}
             <Link
               href="/login"
-              className="text-pink-400 hover:text-pink-300 transition-colors font-medium"
+              className="text-[var(--pink-light)] hover:text-white transition-colors font-medium"
             >
               Sign in
             </Link>

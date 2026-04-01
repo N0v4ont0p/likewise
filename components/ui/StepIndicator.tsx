@@ -79,7 +79,7 @@ export const StepIndicator = ({ steps, currentStep, className }: StepIndicatorPr
 
             {index < steps.length - 1 && (
               <div className="relative flex-1 h-px mx-2 mb-4">
-                <div className="absolute inset-0 bg-white/[0.07] rounded-full" />
+                <div className="absolute inset-0 bg-[var(--surface-2)] rounded-full" />
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-pink-500 to-fuchsia-500 rounded-full origin-left"
                   animate={{ scaleX: isCompleted ? 1 : 0 }}

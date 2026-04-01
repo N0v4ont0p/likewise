@@ -48,12 +48,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden">
-      {/* Glow */}
-      <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-pink-500/[0.06] blur-[120px]" />
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center p-5">
       <div className="w-full max-w-[380px]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -71,7 +66,7 @@ export default function LoginPage() {
               💝
             </motion.div>
             <h1 className="text-2xl font-bold text-white mt-3">Welcome back</h1>
-            <p className="text-white/38 text-sm">Sign in to continue</p>
+            <p className="text-[var(--text-secondary)] text-sm">Sign in to continue</p>
           </div>
 
           <GlassCard className="p-7">
@@ -103,7 +98,7 @@ export default function LoginPage() {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="bg-red-500/[0.1] border border-red-500/[0.2] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300">
+                    <div className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-400">
                       {error}
                     </div>
                   </motion.div>
@@ -123,11 +118,11 @@ export default function LoginPage() {
             </form>
           </GlassCard>
 
-          <p className="text-center text-sm text-white/35">
+          <p className="text-center text-sm text-[var(--text-secondary)]">
             Don&apos;t have an account?{' '}
             <Link
               href="/signup"
-              className="text-pink-400 hover:text-pink-300 transition-colors font-medium"
+              className="text-[var(--pink-light)] hover:text-white transition-colors font-medium"
             >
               Sign up
             </Link>

@@ -83,10 +83,10 @@ export default function MatchesPage() {
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center justify-between"
             >
-              <p className="text-[0.7rem] font-medium text-white/28 uppercase tracking-widest">
+              <p className="text-[0.7rem] font-medium text-[var(--text-tertiary)] uppercase tracking-widest">
                 {matches.length} mutual match{matches.length !== 1 ? 'es' : ''}
               </p>
-              <p className="text-[0.7rem] text-white/20">Private 🔒</p>
+              <p className="text-[0.7rem] text-[var(--text-tertiary)]">Private 🔒</p>
             </motion.div>
 
             {matches.map((match, i) => (
@@ -126,7 +126,7 @@ export default function MatchesPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-center text-white/18 text-[0.7rem] pt-2"
+              className="text-center text-[var(--text-muted)] text-[0.7rem] pt-2"
             >
               Only mutual matches are shown 🔒
             </motion.p>

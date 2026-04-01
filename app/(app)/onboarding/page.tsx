@@ -166,11 +166,7 @@ export default function OnboardingPage() {
         />
       )}
 
-      {/* Glow */}
-      <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-pink-500/[0.06] blur-[120px]" />
-        <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-violet-500/[0.05] blur-[100px]" />
-      </div>
+      {/* No background glow — solid layout */}
 
       <div className="w-full max-w-md space-y-7">
         {/* Header row */}
@@ -184,7 +180,7 @@ export default function OnboardingPage() {
               className="text-center"
             >
               <h1 className="text-2xl font-bold text-white">Welcome to Likewise</h1>
-              <p className="text-white/38 text-sm mt-1">Here&apos;s how it works</p>
+              <p className="text-[var(--text-secondary)] text-sm mt-1">Here&apos;s how it works</p>
             </motion.div>
           ) : step < 2 ? (
             <motion.div
@@ -198,7 +194,7 @@ export default function OnboardingPage() {
                 <h1 className="text-2xl font-bold text-white">
                   {step === 0 ? 'Set up your school' : 'Join or create a class'}
                 </h1>
-                <p className="text-white/38 text-sm mt-1">
+                <p className="text-[var(--text-secondary)] text-sm mt-1">
                   {step === 0
                     ? 'Schools group your classes together'
                     : selectedSchool
@@ -218,7 +214,7 @@ export default function OnboardingPage() {
             >
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-white">You&apos;re all set! 🎉</h1>
-                <p className="text-white/38 text-sm mt-1">Time to meet your classmates</p>
+                <p className="text-[var(--text-secondary)] text-sm mt-1">Time to meet your classmates</p>
               </div>
               <StepIndicator steps={STEPS} currentStep={step} />
             </motion.div>
@@ -332,12 +328,12 @@ function WelcomeStep({ onContinue }: { onContinue: () => void }) {
               transition={{ delay: 0.1 + i * 0.08, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-start gap-4"
             >
-              <div className="h-11 w-11 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-xl shrink-0 mt-0.5">
+              <div className="h-11 w-11 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-xl shrink-0 mt-0.5">
                 {item.icon}
               </div>
               <div>
                 <p className="font-semibold text-white text-[0.9375rem]">{item.title}</p>
-                <p className="text-sm text-white/38 mt-0.5 leading-relaxed">{item.desc}</p>
+                <p className="text-sm text-[var(--text-secondary)] mt-0.5 leading-relaxed">{item.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -381,7 +377,7 @@ function SchoolStep({
   if (!schoolAction) {
     return (
       <GlassCard className="p-6 space-y-4">
-        <p className="text-white/38 text-sm">How would you like to get started?</p>
+        <p className="text-[var(--text-secondary)] text-sm">How would you like to get started?</p>
         <div className="space-y-2.5">
           <OptionCard
             icon="✨"
@@ -435,7 +431,7 @@ function SchoolStep({
       ) : existingSchools.length === 0 ? (
         <div className="text-center py-8 space-y-3">
           <p className="text-4xl">🏫</p>
-          <p className="text-white/40 text-sm">No schools found.</p>
+          <p className="text-[var(--text-secondary)] text-sm">No schools found.</p>
           <Button
             variant="outline"
             size="sm"
@@ -455,12 +451,12 @@ function SchoolStep({
               className="w-full text-left px-4 py-3.5 rounded-[var(--radius-md)] bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface-3)] hover:border-[var(--border-accent)] transition-colors"
             >
               <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-xl bg-white/[0.06] flex items-center justify-center text-lg shrink-0">🏫</div>
+                <div className="h-9 w-9 rounded-xl bg-[var(--surface-2)] flex items-center justify-center text-lg shrink-0">🏫</div>
                 <div>
                   <p className="font-semibold text-white text-[0.9375rem]">{school.name}</p>
-                  <p className="text-xs text-white/30 mt-0.5">Tap to select</p>
+                  <p className="text-xs text-[var(--text-tertiary)] mt-0.5">Tap to select</p>
                 </div>
-                <svg className="ml-auto text-white/20" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <svg className="ml-auto text-[var(--text-tertiary)]" width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
@@ -504,7 +500,7 @@ function ClassStep({
     return (
       <GlassCard className="p-6 space-y-4">
         <BackButton onClick={onBack} label="School" />
-        <p className="text-white/38 text-sm">What would you like to do?</p>
+        <p className="text-[var(--text-secondary)] text-sm">What would you like to do?</p>
         <div className="space-y-2.5">
           <OptionCard
             icon="✨"
@@ -581,13 +577,13 @@ function DoneStep({
       <div className="space-y-2">
         <h2 className="text-2xl font-bold text-white">You&apos;re in!</h2>
         {schoolName && (
-          <p className="text-white/45 text-sm">
-            <span className="text-white/75 font-medium">{schoolName}</span>
-            <span className="mx-1.5 text-white/20">·</span>
+          <p className="text-[var(--text-secondary)] text-sm">
+            <span className="text-white font-medium">{schoolName}</span>
+            <span className="mx-1.5 text-[var(--text-tertiary)]">·</span>
             <span className="text-pink-400 font-medium">{className}</span>
           </p>
         )}
-        <p className="text-white/35 text-sm">Start connecting with your classmates</p>
+        <p className="text-[var(--text-secondary)] text-sm">Start connecting with your classmates</p>
       </div>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         <Button variant="primary" size="lg" onClick={onEnter} className="w-full">
@@ -619,14 +615,14 @@ function OptionCard({
       className="w-full text-left px-4 py-4 rounded-[var(--radius-md)] bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface-3)] hover:border-[var(--border-accent)] transition-colors group"
     >
       <div className="flex items-center gap-3.5">
-        <div className="h-10 w-10 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-xl shrink-0 group-hover:border-pink-500/25 transition-colors">
+        <div className="h-10 w-10 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-xl shrink-0 group-hover:border-[var(--pink)] transition-colors">
           {icon}
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-white text-[0.9375rem] leading-tight">{title}</p>
-          <p className="text-[0.8125rem] text-white/35 mt-0.5">{description}</p>
+          <p className="text-[0.8125rem] text-[var(--text-secondary)] mt-0.5">{description}</p>
         </div>
-        <svg className="text-white/20 group-hover:text-white/40 transition-colors shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <svg className="text-[var(--text-tertiary)] group-hover:text-[var(--text-secondary)] transition-colors shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
@@ -639,7 +635,7 @@ function BackButton({ onClick, label }: { onClick: () => void; label: string }) 
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-1.5 text-[0.8125rem] text-white/35 hover:text-white/65 transition-colors"
+      className="flex items-center gap-1.5 text-[0.8125rem] text-[var(--text-secondary)] hover:text-white/65 transition-colors"
     >
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M9 10.5L5.5 7 9 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -654,7 +650,7 @@ function ErrorNote({ children }: { children: React.ReactNode }) {
     <motion.div
       initial={{ opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-red-500/[0.1] border border-red-500/[0.2] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300"
+      className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300"
     >
       {children}
     </motion.div>

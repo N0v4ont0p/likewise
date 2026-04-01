@@ -22,9 +22,10 @@ export const GlassCard = ({
       whileHover={interactive ? { y: -2, scale: 1.005 } : undefined}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       className={cn(
-        'relative rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-1)] backdrop-blur-xl',
-        glow && 'shadow-[0_0_40px_rgba(236,72,153,0.12)] border-[var(--border-accent)]',
-        interactive && 'cursor-pointer hover:border-white/[0.13] hover:bg-[var(--surface-2)]',
+        'relative rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-1)]',
+        'shadow-[var(--shadow-sm)]',
+        glow && 'border-[rgba(247,54,94,0.35)] shadow-[0_0_0_1px_rgba(247,54,94,0.15),var(--shadow-sm)]',
+        interactive && 'cursor-pointer hover:bg-[var(--surface-2)] hover:border-[var(--surface-3)] transition-colors duration-150',
         className
       )}
       {...props}

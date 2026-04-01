@@ -12,12 +12,12 @@ interface BadgeProps {
 
 export const Badge = ({ children, variant = 'default', size = 'sm', className }: BadgeProps) => {
   const variants = {
-    default: 'bg-white/[0.07] text-white/60 border-white/[0.08]',
-    pink: 'bg-pink-500/[0.15] text-pink-300 border-pink-500/[0.25]',
-    violet: 'bg-violet-500/[0.15] text-violet-300 border-violet-500/[0.25]',
-    success: 'bg-emerald-500/[0.15] text-emerald-300 border-emerald-500/[0.25]',
-    error: 'bg-red-500/[0.15] text-red-300 border-red-500/[0.25]',
-    muted: 'bg-white/[0.04] text-white/30 border-white/[0.06]',
+    default: 'bg-[var(--surface-3)] text-[var(--text-secondary)] border-[var(--border)]',
+    pink:    'bg-[#2a1020] text-[#ff7090] border-[#4a1a35]',
+    violet:  'bg-[#1a1230] text-[#a78bfa] border-[#2e2050]',
+    success: 'bg-[#0d2218] text-emerald-400 border-[#1a3d2a]',
+    error:   'bg-[#2a1020] text-red-400 border-[#4a1a28]',
+    muted:   'bg-[var(--surface-2)] text-[var(--text-tertiary)] border-[var(--border-subtle)]',
   };
 
   const sizes = {

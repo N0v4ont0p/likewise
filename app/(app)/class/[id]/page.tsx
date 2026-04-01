@@ -181,7 +181,7 @@ export default function ClassPage() {
           <GlassCard className="p-4">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-[0.7rem] text-white/30 uppercase tracking-widest font-medium mb-1.5">
+                <p className="text-[0.7rem] text-[var(--text-tertiary)] uppercase tracking-widest font-medium mb-1.5">
                   Invite code
                 </p>
                 <p className="font-mono text-[1.6rem] font-bold text-pink-400 tracking-[0.2em] leading-none">
@@ -224,11 +224,11 @@ export default function ClassPage() {
           >
             <div className="flex-1 rounded-[var(--radius-md)] bg-[var(--surface-1)] border border-[var(--border)] p-3 text-center">
               <p className="text-[1.1875rem] font-bold text-white">{otherMembers.length}</p>
-              <p className="text-[0.7rem] text-white/35 mt-0.5">Classmates</p>
+              <p className="text-[0.7rem] text-[var(--text-secondary)] mt-0.5">Classmates</p>
             </div>
             <div className="flex-1 rounded-[var(--radius-md)] bg-[var(--surface-1)] border border-[var(--border)] p-3 text-center">
               <p className="text-[1.1875rem] font-bold text-pink-400">{likedCount}</p>
-              <p className="text-[0.7rem] text-white/35 mt-0.5">Liked</p>
+              <p className="text-[0.7rem] text-[var(--text-secondary)] mt-0.5">Liked</p>
             </div>
           </motion.div>
         )}
@@ -236,7 +236,7 @@ export default function ClassPage() {
         {/* Members */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[0.7rem] font-medium text-white/28 uppercase tracking-widest">
+            <p className="text-[0.7rem] font-medium text-[var(--text-tertiary)] uppercase tracking-widest">
               Classmates
             </p>
             {likeError && (
@@ -279,7 +279,7 @@ export default function ClassPage() {
                     <GlassCard
                       className={`p-4 transition-colors duration-200 ${
                         isLiked
-                          ? 'border-pink-500/25 bg-pink-500/[0.04]'
+                          ? 'border-[rgba(247,54,94,0.4)] bg-[#1e1020]'
                           : ''
                       }`}
                     >
@@ -313,8 +313,8 @@ export default function ClassPage() {
                           aria-label={isLiked ? 'Unlike' : 'Like'}
                           className={`relative h-11 w-11 rounded-full flex items-center justify-center transition-colors duration-200 shrink-0 ${
                             isLiked
-                              ? 'bg-pink-500/20 border border-pink-500/40'
-                              : 'bg-white/[0.05] border border-white/[0.09] hover:border-pink-500/30 hover:bg-pink-500/[0.08]'
+                              ? 'bg-[#2a1520] border border-[rgba(247,54,94,0.5)]'
+                              : 'bg-[var(--surface-2)] border border-[var(--border)] hover:border-[rgba(247,54,94,0.4)] hover:bg-[#2a1520]'
                           } disabled:opacity-50`}
                         >
                           <AnimatePresence mode="wait">
@@ -347,7 +347,7 @@ export default function ClassPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/70 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-[rgba(0,0,0,0.85)] "
             onClick={() => setShowMatch(null)}
           >
             <motion.div
@@ -370,7 +370,7 @@ export default function ClassPage() {
                   <h2 className="text-[1.75rem] font-extrabold text-white tracking-tight">
                     It&apos;s a match!
                   </h2>
-                  <p className="text-white/60 text-[0.9375rem] leading-relaxed">
+                  <p className="text-[var(--text-secondary)] text-[0.9375rem] leading-relaxed">
                     You and{' '}
                     <span className="text-pink-400 font-semibold">{showMatch.username}</span>{' '}
                     like each other
@@ -384,7 +384,7 @@ export default function ClassPage() {
                   </Link>
                   <button
                     onClick={() => setShowMatch(null)}
-                    className="w-full text-white/35 text-sm hover:text-white/55 transition-colors py-1"
+                    className="w-full text-[var(--text-secondary)] text-sm hover:text-white/55 transition-colors py-1"
                   >
                     Continue browsing
                   </button>

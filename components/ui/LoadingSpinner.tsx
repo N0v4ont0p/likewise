@@ -21,10 +21,10 @@ export const LoadingSpinner = ({ size = 'md', className }: LoadingSpinnerProps) 
       <motion.div
         className={cn(
           sizes[size],
-          'rounded-full border-[2px] border-white/10 border-t-pink-500'
+          'rounded-full border-[2.5px] border-[var(--border)] border-t-[var(--pink)]'
         )}
         animate={{ rotate: 360 }}
-        transition={{ duration: 0.75, repeat: Infinity, ease: 'linear' }}
+        transition={{ duration: 0.7, repeat: Infinity, ease: 'linear' }}
       />
     </div>
   );
@@ -35,7 +35,7 @@ export const LoadingDots = ({ className }: { className?: string }) => (
     {[0, 1, 2].map((i) => (
       <motion.div
         key={i}
-        className="h-1.5 w-1.5 rounded-full bg-pink-500/70"
+        className="h-1.5 w-1.5 rounded-full bg-[var(--pink)]"
         animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.1, 0.8] }}
         transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2, ease: 'easeInOut' }}
       />

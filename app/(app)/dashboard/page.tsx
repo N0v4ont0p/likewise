@@ -150,7 +150,7 @@ export default function DashboardPage() {
                 {user?.username}
               </h1>
             </div>
-            <p className="text-white/35 text-sm mt-0.5 ml-0.5">
+            <p className="text-[var(--text-secondary)] text-sm mt-0.5 ml-0.5">
               {loading
                 ? 'Loading…'
                 : totalClasses === 0
@@ -235,16 +235,16 @@ export default function DashboardPage() {
                   {/* School header */}
                   <button
                     onClick={() => toggleSchool(school.id)}
-                    className="w-full flex items-center gap-3.5 p-4 hover:bg-white/[0.04] transition-colors"
+                    className="w-full flex items-center gap-3.5 p-4 hover:bg-[var(--surface-2)] transition-colors"
                   >
-                    <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-pink-500/20 to-violet-500/20 border border-white/[0.09] flex items-center justify-center text-base shrink-0">
+                    <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#2a1020] to-[#1e1a35] border border-[var(--border)] flex items-center justify-center text-base shrink-0">
                       🏫
                     </div>
                     <div className="flex-1 text-left min-w-0">
                       <p className="font-semibold text-white text-[0.9375rem] truncate">
                         {school.name}
                       </p>
-                      <p className="text-[0.75rem] text-white/35 mt-0.5">
+                      <p className="text-[0.75rem] text-[var(--text-secondary)] mt-0.5">
                         {classes.length} class{classes.length !== 1 ? 'es' : ''}
                       </p>
                     </div>
@@ -255,7 +255,7 @@ export default function DashboardPage() {
                       height="14"
                       viewBox="0 0 14 14"
                       fill="none"
-                      className="text-white/30 shrink-0"
+                      className="text-[var(--text-tertiary)] shrink-0"
                     >
                       <path
                         d="M5.5 3.5L9 7l-3.5 3.5"
@@ -277,23 +277,23 @@ export default function DashboardPage() {
                         transition={{ duration: 0.22, ease: 'easeOut' }}
                         className="overflow-hidden"
                       >
-                        <div className="border-t border-white/[0.06]">
+                        <div className="border-t border-[var(--border)]">
                           {classes.length === 0 ? (
                             <div className="px-4 py-4 pl-[3.875rem]">
-                              <p className="text-[0.75rem] text-white/28">No classes yet</p>
+                              <p className="text-[0.75rem] text-[var(--text-tertiary)]">No classes yet</p>
                             </div>
                           ) : (
                             classes.map((cls) => (
                               <Link key={cls.id} href={`/class/${cls.id}`}>
-                                <div className="flex items-center gap-3 px-4 py-3 pl-[3.875rem] hover:bg-white/[0.04] transition-colors border-b border-white/[0.05] last:border-0">
-                                  <div className="h-7 w-7 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-xs shrink-0">
+                                <div className="flex items-center gap-3 px-4 py-3 pl-[3.875rem] hover:bg-[var(--surface-2)] transition-colors border-b border-[var(--border-subtle)] last:border-0">
+                                  <div className="h-7 w-7 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-xs shrink-0">
                                     🎓
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <p className="text-[0.875rem] text-white font-medium truncate">
                                       {cls.name}
                                     </p>
-                                    <p className="text-[0.7rem] text-white/25 font-mono mt-0.5 tracking-wide">
+                                    <p className="text-[0.7rem] text-[var(--text-tertiary)] font-mono mt-0.5 tracking-wide">
                                       {cls.inviteCode}
                                     </p>
                                   </div>
@@ -302,7 +302,7 @@ export default function DashboardPage() {
                                     height="12"
                                     viewBox="0 0 12 12"
                                     fill="none"
-                                    className="text-white/18 shrink-0"
+                                    className="text-[var(--text-muted)] shrink-0"
                                   >
                                     <path
                                       d="M4.5 2.5L8 6l-3.5 3.5"
@@ -328,7 +328,7 @@ export default function DashboardPage() {
             {ungroupedClasses.length > 0 && (
               <div className="space-y-2.5">
                 {schoolsData.length > 0 && (
-                  <p className="text-[0.7rem] font-medium text-white/28 uppercase tracking-widest px-0.5">
+                  <p className="text-[0.7rem] font-medium text-[var(--text-tertiary)] uppercase tracking-widest px-0.5">
                     Other classes
                   </p>
                 )}
@@ -346,7 +346,7 @@ export default function DashboardPage() {
                     <Link href={`/class/${group.id}`}>
                       <GlassCard interactive className="p-4">
                         <div className="flex items-center gap-3.5">
-                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-pink-500/15 to-violet-500/15 border border-white/[0.09] flex items-center justify-center text-base shrink-0">
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#2a1020] to-[#1e1a35] border border-[var(--border)] flex items-center justify-center text-base shrink-0">
                             🎓
                           </div>
                           <div className="flex-1 min-w-0">
@@ -358,7 +358,7 @@ export default function DashboardPage() {
                                 {role === 'owner' ? 'Owner' : 'Member'}
                               </Badge>
                             </div>
-                            <p className="text-[0.75rem] text-white/30 font-mono tracking-wide mt-0.5">
+                            <p className="text-[0.75rem] text-[var(--text-tertiary)] font-mono tracking-wide mt-0.5">
                               {group.inviteCode}
                             </p>
                           </div>
@@ -367,7 +367,7 @@ export default function DashboardPage() {
                             height="14"
                             viewBox="0 0 14 14"
                             fill="none"
-                            className="text-white/25 shrink-0"
+                            className="text-[var(--text-tertiary)] shrink-0"
                           >
                             <path
                               d="M5.5 3.5L9 7l-3.5 3.5"
@@ -395,7 +395,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-[rgba(0,0,0,0.78)] "
             onClick={(e) => {
               if (e.target === e.currentTarget) setModal(null);
             }}
@@ -414,7 +414,7 @@ export default function DashboardPage() {
                   </h2>
                   <button
                     onClick={() => setModal(null)}
-                    className="h-8 w-8 rounded-full flex items-center justify-center text-white/35 hover:text-white/65 hover:bg-white/[0.07] transition-colors"
+                    className="h-8 w-8 rounded-full flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-2)] transition-colors"
                     aria-label="Close"
                   >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -460,7 +460,7 @@ export default function DashboardPage() {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                       >
-                        <div className="bg-red-500/[0.1] border border-red-500/[0.2] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300">
+                        <div className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300">
                           {error}
                         </div>
                       </motion.div>

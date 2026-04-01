@@ -3,12 +3,12 @@
 import { cn } from '@/lib/utils';
 
 const GRADIENTS = [
-  'from-pink-500/50 to-fuchsia-600/50',
-  'from-violet-500/50 to-purple-600/50',
-  'from-rose-500/50 to-pink-600/50',
-  'from-fuchsia-500/50 to-violet-600/50',
-  'from-pink-400/50 to-rose-500/50',
-  'from-purple-500/50 to-fuchsia-600/50',
+  ['#f7365e', '#f06233'],
+  ['#7c5cfc', '#c026d3'],
+  ['#e11d48', '#f59e0b'],
+  ['#0ea5e9', '#6366f1'],
+  ['#10b981', '#0ea5e9'],
+  ['#f59e0b', '#ef4444'],
 ];
 
 const getGradient = (name: string) => {
@@ -37,24 +37,24 @@ const sizes = {
 
 export const Avatar = ({ name, size = 'md', className, showRing = false, badge }: AvatarProps) => {
   const initial = (name || '?')[0].toUpperCase();
-  const gradient = getGradient(name);
+  const [from, to] = getGradient(name);
   const s = sizes[size];
 
   return (
     <div className={cn('relative shrink-0', s.container, className)}>
       <div
+        style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
         className={cn(
-          'h-full w-full rounded-full flex items-center justify-center font-semibold text-white select-none',
-          `bg-gradient-to-br ${gradient}`,
-          showRing && 'ring-2 ring-pink-500/30 ring-offset-1 ring-offset-[#07070f]'
+          'h-full w-full rounded-full flex items-center justify-center font-bold text-white select-none',
+          showRing && 'ring-2 ring-[var(--pink)] ring-offset-2 ring-offset-[var(--bg)]'
         )}
       >
-        <span className={s.text}>{initial}</span>
+        <span className={cn(s.text, 'drop-shadow-sm')}>{initial}</span>
       </div>
       {badge && (
         <div
           className={cn(
-            'absolute -bottom-0.5 -right-0.5 rounded-full bg-[#07070f] flex items-center justify-center',
+            'absolute -bottom-0.5 -right-0.5 rounded-full bg-[var(--bg)] flex items-center justify-center',
             s.badge
           )}
         >

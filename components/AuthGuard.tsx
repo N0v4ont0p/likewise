@@ -36,7 +36,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             <p className="text-white text-[1.0625rem] font-semibold">
               Session error
             </p>
-            <p className="text-white/45 text-sm leading-relaxed">
+            <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
               We couldn&apos;t verify your session. Please sign in again.
             </p>
           </div>

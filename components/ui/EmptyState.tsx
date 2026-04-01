@@ -16,7 +16,7 @@ export const EmptyState = ({ icon, title, description, action, className }: Empt
   <motion.div
     initial={{ opacity: 0, scale: 0.97 }}
     animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
     className={cn(
       'flex flex-col items-center justify-center text-center py-14 px-6 space-y-3',
       className
@@ -45,7 +45,7 @@ export const EmptyState = ({ icon, title, description, action, className }: Empt
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.3 }}
-        className="text-sm text-white/35 max-w-xs"
+        className="text-sm text-[var(--text-secondary)] max-w-xs"
       >
         {description}
       </motion.p>

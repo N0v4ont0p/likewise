@@ -61,7 +61,7 @@ export default function SettingsPage() {
               <Avatar name={user?.username || '?'} size="lg" />
               <div>
                 <p className="font-bold text-white text-[1.0625rem]">{user?.username}</p>
-                <p className="text-[0.8125rem] text-white/35 mt-0.5">
+                <p className="text-[0.8125rem] text-[var(--text-secondary)] mt-0.5">
                   {user?.createdAt
                     ? `Joined ${new Date(user.createdAt).toLocaleDateString('en-US', {
                         month: 'long',
@@ -82,7 +82,7 @@ export default function SettingsPage() {
         >
           <GlassCard className="overflow-hidden">
             <div className="px-5 pt-5 pb-3">
-              <p className="text-[0.7rem] font-medium text-white/30 uppercase tracking-widest">
+              <p className="text-[0.7rem] font-medium text-[var(--text-tertiary)] uppercase tracking-widest">
                 Privacy
               </p>
             </div>
@@ -100,12 +100,12 @@ export default function SettingsPage() {
                 },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3.5 px-5 py-3.5">
-                  <div className="h-9 w-9 rounded-xl bg-white/[0.05] border border-white/[0.07] flex items-center justify-center text-base shrink-0 mt-0.5">
+                  <div className="h-9 w-9 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-base shrink-0 mt-0.5">
                     {item.icon}
                   </div>
                   <div>
                     <p className="text-[0.9375rem] font-medium text-white">{item.title}</p>
-                    <p className="text-[0.8125rem] text-white/35 mt-0.5 leading-relaxed">{item.desc}</p>
+                    <p className="text-[0.8125rem] text-[var(--text-secondary)] mt-0.5 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -137,7 +137,7 @@ export default function SettingsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
-          <GlassCard className="p-5 space-y-4 border-red-500/15">
+          <GlassCard className="p-5 space-y-4 border-[#4a1a28]">
             <p className="text-[0.7rem] font-medium text-red-400/70 uppercase tracking-widest">
               Danger zone
             </p>
@@ -167,7 +167,7 @@ export default function SettingsPage() {
                   onSubmit={handleDeleteAccount}
                   className="space-y-4 overflow-hidden"
                 >
-                  <p className="text-[0.875rem] text-white/45 leading-relaxed">
+                  <p className="text-[0.875rem] text-[var(--text-secondary)] leading-relaxed">
                     This permanently deletes your account and all your likes. This cannot be undone.
                   </p>
                   <Input
@@ -186,7 +186,7 @@ export default function SettingsPage() {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                       >
-                        <div className="bg-red-500/[0.1] border border-red-500/[0.2] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300">
+                        <div className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300">
                           {error}
                         </div>
                       </motion.div>

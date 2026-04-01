@@ -21,19 +21,19 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-medium rounded-[var(--radius-md)] transition-colors select-none disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500/40';
+    'inline-flex items-center justify-center font-semibold rounded-[var(--radius-md)] transition-colors select-none disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pink)]/50';
 
   const variants = {
     primary:
-      'bg-gradient-to-br from-pink-500 to-fuchsia-600 text-white hover:from-pink-400 hover:to-fuchsia-500 shadow-[0_4px_20px_rgba(236,72,153,0.3)] hover:shadow-[0_6px_28px_rgba(236,72,153,0.4)] border border-pink-500/20',
+      'bg-gradient-to-r from-[#f7365e] to-[#f06233] text-white shadow-[0_4px_18px_rgba(247,54,94,0.35)] hover:shadow-[0_6px_24px_rgba(247,54,94,0.45)] hover:from-[#ff4d70] hover:to-[#f57040]',
     secondary:
-      'bg-white/[0.06] text-white hover:bg-white/[0.10] border border-white/[0.09] hover:border-white/[0.16]',
+      'bg-[var(--surface-2)] text-white border border-[var(--border)] hover:bg-[var(--surface-3)] hover:border-[#3a3a56] transition-colors',
     ghost:
-      'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent',
+      'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-2)] transition-colors',
     danger:
-      'bg-red-500/[0.12] text-red-300 hover:bg-red-500/[0.20] border border-red-500/[0.25] hover:border-red-500/[0.40]',
+      'bg-[#2a1520] text-red-400 border border-[#4a1a28] hover:bg-[#3a1a28] hover:border-[#6a2038] transition-colors',
     outline:
-      'bg-transparent text-pink-400 hover:bg-pink-500/10 border border-pink-500/30 hover:border-pink-500/50',
+      'bg-transparent text-[var(--pink)] border border-[rgba(247,54,94,0.4)] hover:bg-[var(--pink-dim)] hover:border-[var(--pink)] transition-colors',
   };
 
   const sizes = {

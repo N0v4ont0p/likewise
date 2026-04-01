@@ -56,21 +56,7 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden">
-      {/* Ambient glows */}
-      <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
-        <motion.div
-          className="absolute top-[5%] right-[10%] h-[480px] w-[480px] rounded-full bg-pink-500/[0.07] blur-[100px]"
-          animate={{ scale: [1, 1.08, 1], opacity: [0.7, 1, 0.7] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-[5%] left-[5%] h-[400px] w-[400px] rounded-full bg-violet-500/[0.06] blur-[100px]"
-          animate={{ scale: [1, 1.06, 1], opacity: [0.6, 0.9, 0.6] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-        />
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center p-5">
       <div className="w-full max-w-[420px]">
         <motion.div
           variants={stagger.container}
@@ -91,28 +77,28 @@ export default function LandingPage() {
               <h1 className="text-[3.25rem] font-black tracking-tight gradient-text leading-none">
                 Likewise
               </h1>
-              <p className="text-white/40 text-lg font-light tracking-wide">
+              <p className="text-[var(--text-secondary)] text-lg font-light tracking-wide">
                 Private. Mutual. Class-based.
               </p>
             </div>
           </motion.div>
 
           {/* Features */}
-          <motion.div variants={stagger.item} className="space-y-2.5">
+          <motion.div variants={stagger.item} className="space-y-2">
             {features.map((f, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.35 + i * 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="flex items-center gap-4 rounded-2xl bg-white/[0.04] border border-white/[0.06] px-4 py-3.5"
+                className="flex items-center gap-4 rounded-[var(--radius-md)] bg-[var(--surface-1)] border border-[var(--border)] px-4 py-3.5 shadow-[var(--shadow-sm)]"
               >
-                <div className="h-10 w-10 rounded-xl bg-white/[0.06] border border-white/[0.07] flex items-center justify-center text-xl shrink-0">
+                <div className="h-10 w-10 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-xl shrink-0">
                   {f.icon}
                 </div>
                 <div>
                   <p className="text-[0.9375rem] font-semibold text-white">{f.title}</p>
-                  <p className="text-[0.8125rem] text-white/35 mt-0.5">{f.desc}</p>
+                  <p className="text-[0.8125rem] text-[var(--text-secondary)] mt-0.5">{f.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -134,7 +120,7 @@ export default function LandingPage() {
 
           <motion.p
             variants={stagger.item}
-            className="text-center text-white/18 text-[0.75rem]"
+            className="text-center text-[var(--text-tertiary)] text-[0.75rem]"
           >
             Crushes stay private until it&apos;s mutual 💝
           </motion.p>

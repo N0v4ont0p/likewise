@@ -13,7 +13,7 @@ import {
   Unsubscribe,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { Group, Membership, Match } from '../types';
+import { Group, Membership, Match, School } from '../types';
 
 const generateInviteCode = (): string => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -22,7 +22,51 @@ const generateInviteCode = (): string => {
   return Array.from(array, (byte) => chars[byte % chars.length]).join('');
 };
 
-export const createGroup = async (userId: string, username: string, groupName: string): Promise<Group> => {
+export const createSchool = async (userId: string, schoolName: string): Promise<School> => {
+  const schoolRef = await addDoc(collection(db, 'schools'), {
+    name: schoolName.trim(),
+    ownerId: userId,
+    createdAt: serverTimestamp(),
+  });
+
+  await setDoc(doc(db, 'schoolMembers', `${schoolRef.id}_${userId}`), {
+    userId,
+    schoolId: schoolRef.id,
+    role: 'owner',
+    joinedAt: serverTimestamp(),
+  });
+
+  return {
+    id: schoolRef.id,
+    name: schoolName.trim(),
+    ownerId: userId,
+    createdAt: new Date(),
+  };
+};
+
+export const getUserSchools = async (userId: string): Promise<School[]> => {
+  const q = query(collection(db, 'schoolMembers'), where('userId', '==', userId));
+  const snapshot = await getDocs(q);
+
+  const schools = await Promise.all(
+    snapshot.docs.map(async (memberDoc) => {
+      const { schoolId } = memberDoc.data();
+      const schoolDoc = await getDoc(doc(db, 'schools', schoolId));
+      if (!schoolDoc.exists()) return null;
+      return { id: schoolDoc.id, ...schoolDoc.data() } as School;
+    })
+  );
+
+  return schools.filter(Boolean) as School[];
+};
+
+export const getSchoolClasses = async (schoolId: string): Promise<Group[]> => {
+  const q = query(collection(db, 'groups'), where('schoolId', '==', schoolId));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Group));
+};
+
+export const createGroup = async (userId: string, username: string, groupName: string, schoolId?: string): Promise<Group> => {
   let inviteCode = generateInviteCode();
   
   let attempts = 0;
@@ -42,6 +86,7 @@ export const createGroup = async (userId: string, username: string, groupName: s
     ownerId: userId,
     inviteCode,
     createdAt: serverTimestamp(),
+    ...(schoolId ? { schoolId } : {}),
   });
 
   await setDoc(doc(db, 'memberships', `${groupRef.id}_${userId}`), {
@@ -59,6 +104,7 @@ export const createGroup = async (userId: string, username: string, groupName: s
     ownerId: userId,
     inviteCode,
     createdAt: new Date(),
+    ...(schoolId ? { schoolId } : {}),
   };
 };
 

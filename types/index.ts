@@ -4,6 +4,13 @@ export interface User {
   createdAt: Date;
 }
 
+export interface School {
+  id: string;
+  name: string;
+  ownerId: string;
+  createdAt: Date;
+}
+
 export interface Group {
   id: string;
   name: string;
@@ -11,6 +18,7 @@ export interface Group {
   inviteCode: string;
   createdAt: Date;
   memberCount?: number;
+  schoolId?: string;
 }
 
 export interface Membership {

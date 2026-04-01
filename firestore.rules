@@ -18,6 +18,24 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    // Schools collection
+    match /schools/{schoolId} {
+      allow read: if isAuthenticated() &&
+        exists(/databases/$(database)/documents/schoolMembers/$(schoolId + '_' + request.auth.uid));
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && resource.data.ownerId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.ownerId == request.auth.uid;
+    }
+
+    // School memberships
+    match /schoolMembers/{membershipId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.userId == request.auth.uid ||
+         exists(/databases/$(database)/documents/schoolMembers/$(resource.data.schoolId + '_' + request.auth.uid)));
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
     // Groups collection
     match /groups/{groupId} {
       allow read: if isAuthenticated() &&

@@ -9,6 +9,7 @@ import {
   setPersistence,
   browserLocalPersistence,
 } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import {
   doc,
   setDoc,
@@ -70,6 +71,18 @@ const cacheSessionUser = (userId: string, data: { username?: string; displayUser
   }
 };
 
+const formatAuthError = (error: unknown) => {
+  if (error instanceof FirebaseError) {
+    if (error.code === 'auth/invalid-api-key') {
+      return new Error('Authentication is misconfigured. Please verify your Firebase environment variables and try again.');
+    }
+    if (error.code === 'auth/network-request-failed') {
+      return new Error('Network error prevented contacting the authentication service. Please check your connection and try again.');
+    }
+  }
+  return error;
+};
+
 export const isUsernameAvailable = async (username: string): Promise<boolean> => {
   const q = query(collection(db, 'users'), where('username', '==', username.toLowerCase()));
   const snapshot = await withTimeout(getDocs(q), 'Username check timed out');
@@ -77,59 +90,67 @@ export const isUsernameAvailable = async (username: string): Promise<boolean> =>
 };
 
 export const signUp = async (username: string, password: string) => {
-  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
-    throw new Error('Username must be 3-20 characters and contain only letters, numbers, and underscores');
+  try {
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+      throw new Error('Username must be 3-20 characters and contain only letters, numbers, and underscores');
+    }
+
+    await ensurePersistence();
+
+    const available = await isUsernameAvailable(username);
+    if (!available) {
+      throw new Error('Username is already taken');
+    }
+
+    const email = `${username.toLowerCase()}@mutualmatchweb.app`;
+    const userCredential = await withTimeout(
+      createUserWithEmailAndPassword(auth, email, password),
+      'Creating your account is taking too long. Please try again.'
+    );
+    const user = userCredential.user;
+
+    await withTimeout(updateProfile(user, { displayName: username }), 'Updating your profile is taking too long.');
+
+    await withTimeout(
+      setDoc(doc(db, 'users', user.uid), {
+        id: user.uid,
+        username: username.toLowerCase(),
+        displayUsername: username,
+        createdAt: serverTimestamp(),
+      }),
+      'Saving your profile is taking too long.'
+    );
+
+    cacheSessionUser(user.uid, { username, createdAt: new Date() });
+    return user;
+  } catch (error) {
+    throw formatAuthError(error);
   }
-
-  await ensurePersistence();
-
-  const available = await isUsernameAvailable(username);
-  if (!available) {
-    throw new Error('Username is already taken');
-  }
-
-  const email = `${username.toLowerCase()}@mutualmatchweb.app`;
-  const userCredential = await withTimeout(
-    createUserWithEmailAndPassword(auth, email, password),
-    'Creating your account is taking too long. Please try again.'
-  );
-  const user = userCredential.user;
-
-  await withTimeout(updateProfile(user, { displayName: username }), 'Updating your profile is taking too long.');
-
-  await withTimeout(
-    setDoc(doc(db, 'users', user.uid), {
-      id: user.uid,
-      username: username.toLowerCase(),
-      displayUsername: username,
-      createdAt: serverTimestamp(),
-    }),
-    'Saving your profile is taking too long.'
-  );
-
-  cacheSessionUser(user.uid, { username, createdAt: new Date() });
-  return user;
 };
 
 export const signIn = async (username: string, password: string) => {
-  const email = `${username.toLowerCase()}@mutualmatchweb.app`;
-  await ensurePersistence();
-  const userCredential = await withTimeout(
-    signInWithEmailAndPassword(auth, email, password),
-    'Signing in is taking longer than expected. Please try again.'
-  );
+  try {
+    const email = `${username.toLowerCase()}@mutualmatchweb.app`;
+    await ensurePersistence();
+    const userCredential = await withTimeout(
+      signInWithEmailAndPassword(auth, email, password),
+      'Signing in is taking longer than expected. Please try again.'
+    );
 
-  const userProfile = await withTimeout(
-    getDoc(doc(db, 'users', userCredential.user.uid)),
-    'Loading your profile is taking too long.'
-  );
-  if (userProfile.exists()) {
-    cacheSessionUser(userCredential.user.uid, userProfile.data());
-  } else {
-    cacheSessionUser(userCredential.user.uid, { username });
+    const userProfile = await withTimeout(
+      getDoc(doc(db, 'users', userCredential.user.uid)),
+      'Loading your profile is taking too long.'
+    );
+    if (userProfile.exists()) {
+      cacheSessionUser(userCredential.user.uid, userProfile.data());
+    } else {
+      cacheSessionUser(userCredential.user.uid, { username });
+    }
+
+    return userCredential.user;
+  } catch (error) {
+    throw formatAuthError(error);
   }
-
-  return userCredential.user;
 };
 
 export const logOut = async () => {

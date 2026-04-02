@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { signUp } from '@/lib/auth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { GlassCard } from '@/components/ui/GlassCard';
 import Link from 'next/link';
 
 const passwordRequirements = [
@@ -16,7 +15,7 @@ const passwordRequirements = [
   { test: (p: string) => /[^A-Za-z0-9]/.test(p), label: 'One special character' },
 ];
 
-const strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-emerald-500'];
+const strengthColors = ['#ef4444', '#f97316', '#eab308', '#10b981'];
 const strengthLabels = ['Weak', 'Fair', 'Good', 'Strong'];
 
 export default function SignupPage() {
@@ -76,160 +75,208 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5">
-      <div className="w-full max-w-[380px]">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="space-y-6"
-        >
-          {/* Logo */}
-          <div className="text-center space-y-1 pb-2">
-            <motion.div
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              className="text-5xl"
+    <div className="lw-page px-5 py-10">
+      {/* Background glow */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(124,92,252,0.06) 0%, transparent 70%)' }}
+        aria-hidden="true"
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-[400px] space-y-8 relative z-10"
+      >
+        {/* Logo */}
+        <div className="text-center space-y-4">
+          <motion.div
+            animate={{ y: [0, -5, 0] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="inline-flex"
+          >
+            <div
+              className="h-16 w-16 rounded-2xl flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, #7c5cfc, #c026d3)',
+                boxShadow: '0 0 32px rgba(124,92,252,0.4)',
+              }}
             >
-              💝
-            </motion.div>
-            <h1 className="text-2xl font-bold text-white mt-3">Create account</h1>
-            <p className="text-[var(--text-secondary)] text-sm">Join Likewise for free</p>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+            </div>
+          </motion.div>
+          <div>
+            <h1 className="text-heading text-white">Create account</h1>
+            <p className="text-[0.9rem] mt-2" style={{ color: 'var(--text-secondary)' }}>
+              Join Likewise for free
+            </p>
           </div>
+        </div>
 
-          <GlassCard className="p-7">
-            <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Form card */}
+        <div
+          className="rounded-[var(--radius-xl)] p-7 space-y-5"
+          style={{
+            background: 'var(--surface-1)',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-lg)',
+          }}
+        >
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              label="Username"
+              placeholder="your_username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              autoCapitalize="none"
+              hint="3–20 characters: letters, numbers, underscores"
+              required
+            />
+
+            <div className="space-y-2">
               <Input
-                label="Username"
-                placeholder="your_username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
-                autoCapitalize="none"
-                hint="3–20 characters: letters, numbers, underscores"
-                required
-              />
-
-              <div className="space-y-2">
-                <Input
-                  label="Password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="new-password"
-                  required
-                />
-                <AnimatePresence>
-                  {password && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="overflow-hidden space-y-2"
-                    >
-                      {/* Strength bar */}
-                      <div className="space-y-1">
-                        <div className="flex gap-1">
-                          {[0, 1, 2, 3].map((i) => (
-                            <div
-                              key={i}
-                              className={`h-[3px] flex-1 rounded-full transition-all duration-300 ${
-                                i < passwordStrength
-                                  ? strengthColors[passwordStrength - 1]
-                                  : 'bg-[var(--border)]'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        {passwordStrength > 0 && (
-                          <p className="text-[0.7rem] text-[var(--text-tertiary)]">
-                            {strengthLabels[passwordStrength - 1]}
-                          </p>
-                        )}
-                      </div>
-                      {/* Requirements */}
-                      <div className="grid grid-cols-2 gap-1">
-                        {passwordRequirements.map((req, i) => (
-                          <div key={i} className="flex items-center gap-1.5">
-                            <div
-                              className={`h-1.5 w-1.5 rounded-full flex-shrink-0 transition-colors ${
-                                req.test(password) ? 'bg-emerald-400' : 'bg-[var(--surface-3)]'
-                              }`}
-                            />
-                            <span
-                              className={`text-[0.7rem] transition-colors ${
-                                req.test(password) ? 'text-emerald-400' : 'text-[var(--text-muted)]'
-                              }`}
-                            >
-                              {req.label}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <Input
-                label="Confirm password"
+                label="Password"
                 type="password"
                 placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
-                error={
-                  confirmPassword && password !== confirmPassword
-                    ? 'Passwords do not match'
-                    : undefined
-                }
                 required
               />
-
               <AnimatePresence>
-                {(error || statusHint) && (
+                {password && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
+                    className="overflow-hidden space-y-2"
                   >
-                    {error ? (
-                      <div className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-400">
-                        {error}
+                    {/* Strength bar */}
+                    <div className="space-y-1.5">
+                      <div className="flex gap-1.5">
+                        {[0, 1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className="h-[3px] flex-1 rounded-full transition-all duration-300"
+                            style={{
+                              background: i < passwordStrength
+                                ? strengthColors[passwordStrength - 1]
+                                : 'var(--border)',
+                            }}
+                          />
+                        ))}
                       </div>
-                    ) : (
-                      <p className="text-sm text-[var(--text-secondary)] text-center">{statusHint}</p>
-                    )}
+                      {passwordStrength > 0 && (
+                        <p
+                          className="text-[0.6875rem] font-medium"
+                          style={{ color: strengthColors[passwordStrength - 1] }}
+                        >
+                          {strengthLabels[passwordStrength - 1]}
+                        </p>
+                      )}
+                    </div>
+                    {/* Requirements */}
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {passwordRequirements.map((req, i) => {
+                        const met = req.test(password);
+                        return (
+                          <div key={i} className="flex items-center gap-2">
+                            <div
+                              className="h-2 w-2 rounded-full shrink-0 transition-colors duration-300"
+                              style={{ background: met ? '#10b981' : 'var(--surface-3)' }}
+                            />
+                            <span
+                              className="text-[0.6875rem] transition-colors duration-300"
+                              style={{ color: met ? '#10b981' : 'var(--text-muted)' }}
+                            >
+                              {req.label}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
 
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                loading={loading}
-                disabled={!canSubmit}
-                className="w-full mt-1"
-              >
-                Create account
-              </Button>
-            </form>
-          </GlassCard>
+            <Input
+              label="Confirm password"
+              type="password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
+              error={
+                confirmPassword && password !== confirmPassword
+                  ? 'Passwords do not match'
+                  : undefined
+              }
+              required
+            />
 
-          <p className="text-center text-sm text-[var(--text-secondary)]">
-            Already have an account?{' '}
-            <Link
-              href="/login"
-              className="text-[var(--pink-light)] hover:text-white transition-colors font-medium"
+            <AnimatePresence>
+              {(error || statusHint) && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  {error ? (
+                    <div
+                      className="flex items-center gap-2.5 rounded-[var(--radius-md)] px-4 py-3 text-sm"
+                      style={{
+                        background: 'rgba(239,68,68,0.08)',
+                        border: '1px solid rgba(239,68,68,0.25)',
+                        color: '#f87171',
+                      }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                        <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.3"/>
+                        <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+                      </svg>
+                      {error}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-center" style={{ color: 'var(--text-secondary)' }}>
+                      {statusHint}
+                    </p>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              loading={loading}
+              disabled={!canSubmit}
+              className="w-full font-bold text-[1rem] mt-1"
             >
-              Sign in
-            </Link>
-          </p>
-        </motion.div>
-      </div>
+              Create account →
+            </Button>
+          </form>
+        </div>
+
+        <p className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
+          Already have an account?{' '}
+          <Link
+            href="/login"
+            className="font-semibold transition-colors"
+            style={{ color: 'var(--pink-light)' }}
+          >
+            Sign in
+          </Link>
+        </p>
+      </motion.div>
     </div>
   );
 }
+
+

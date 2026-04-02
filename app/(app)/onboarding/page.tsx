@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { createSchool, getUserSchools, createGroup, joinGroupByCode } from '@/lib/firestore';
-import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { StepIndicator } from '@/components/ui/StepIndicator';
@@ -14,6 +13,7 @@ import { School } from '@/types';
 import dynamic from 'next/dynamic';
 
 const ReactConfetti = dynamic(() => import('react-confetti'), { ssr: false });
+
 
 type OnboardingAction = 'create-school' | 'select-school' | null;
 type ClassAction = 'create' | 'join' | null;
@@ -155,7 +155,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden">
+    <div className="lw-page px-5" style={{ background: 'var(--bg)' }}>
       {confetti && (
         <ReactConfetti
           width={typeof window !== 'undefined' ? window.innerWidth : 400}
@@ -166,9 +166,7 @@ export default function OnboardingPage() {
         />
       )}
 
-      {/* No background glow — solid layout */}
-
-      <div className="w-full max-w-md space-y-7">
+      <div className="w-full max-w-md space-y-7 py-10">
         {/* Header row */}
         <AnimatePresence mode="wait">
           {step === -1 ? (
@@ -313,7 +311,10 @@ export default function OnboardingPage() {
 
 function WelcomeStep({ onContinue }: { onContinue: () => void }) {
   return (
-    <GlassCard className="overflow-hidden">
+    <div
+      className="overflow-hidden rounded-[var(--radius-xl)]"
+      style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+    >
       <div className="p-7 space-y-6">
         <div className="space-y-4">
           {[
@@ -328,24 +329,26 @@ function WelcomeStep({ onContinue }: { onContinue: () => void }) {
               transition={{ delay: 0.1 + i * 0.08, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-start gap-4"
             >
-              <div className="h-11 w-11 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-xl shrink-0 mt-0.5">
+              <div
+                className="h-11 w-11 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
+                style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
+              >
                 {item.icon}
               </div>
               <div>
                 <p className="font-semibold text-white text-[0.9375rem]">{item.title}</p>
-                <p className="text-sm text-[var(--text-secondary)] mt-0.5 leading-relaxed">{item.desc}</p>
+                <p className="text-sm mt-0.5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{item.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
-
         <div className="pt-1">
           <Button variant="primary" size="lg" className="w-full" onClick={onContinue}>
-            Let&apos;s get started
+            Let&apos;s get started →
           </Button>
         </div>
       </div>
-    </GlassCard>
+    </div>
   );
 }
 
@@ -376,8 +379,11 @@ function SchoolStep({
 }) {
   if (!schoolAction) {
     return (
-      <GlassCard className="p-6 space-y-4">
-        <p className="text-[var(--text-secondary)] text-sm">How would you like to get started?</p>
+      <div
+        className="rounded-[var(--radius-xl)] p-6 space-y-4"
+        style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+      >
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>How would you like to get started?</p>
         <div className="space-y-2.5">
           <OptionCard
             icon="✨"
@@ -392,13 +398,16 @@ function SchoolStep({
             onClick={() => onActionSelect('select-school')}
           />
         </div>
-      </GlassCard>
+      </div>
     );
   }
 
   if (schoolAction === 'create-school') {
     return (
-      <GlassCard className="p-6 space-y-5">
+      <div
+        className="rounded-[var(--radius-xl)] p-6 space-y-5"
+        style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+      >
         <BackButton onClick={() => onActionSelect(null)} label="Choose option" />
         <form onSubmit={onCreateSchool} className="space-y-4">
           <Input
@@ -409,20 +418,21 @@ function SchoolStep({
             required
             autoFocus
           />
-          {schoolError && (
-            <ErrorNote>{schoolError}</ErrorNote>
-          )}
+          {schoolError && <ErrorNote>{schoolError}</ErrorNote>}
           <Button type="submit" variant="primary" size="lg" loading={submitting} className="w-full">
             Create school
           </Button>
         </form>
-      </GlassCard>
+      </div>
     );
   }
 
   // select-school
   return (
-    <GlassCard className="p-6 space-y-4">
+    <div
+      className="rounded-[var(--radius-xl)] p-6 space-y-4"
+      style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+    >
       <BackButton onClick={() => onActionSelect(null)} label="Choose option" />
       {loadingSchools ? (
         <div className="flex justify-center py-8">
@@ -431,12 +441,8 @@ function SchoolStep({
       ) : existingSchools.length === 0 ? (
         <div className="text-center py-8 space-y-3">
           <p className="text-4xl">🏫</p>
-          <p className="text-[var(--text-secondary)] text-sm">No schools found.</p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onActionSelect('create-school')}
-          >
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>No schools found.</p>
+          <Button variant="outline" size="sm" onClick={() => onActionSelect('create-school')}>
             Create one instead
           </Button>
         </div>
@@ -448,15 +454,19 @@ function SchoolStep({
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
               onClick={() => onSelectSchool(school)}
-              className="w-full text-left px-4 py-3.5 rounded-[var(--radius-md)] bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface-3)] hover:border-[var(--border-accent)] transition-colors"
+              className="w-full text-left px-4 py-3.5 rounded-[var(--radius-md)] transition-colors"
+              style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
             >
               <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-xl bg-[var(--surface-2)] flex items-center justify-center text-lg shrink-0">🏫</div>
+                <div
+                  className="h-9 w-9 rounded-xl flex items-center justify-center text-lg shrink-0"
+                  style={{ background: 'var(--surface-3)' }}
+                >🏫</div>
                 <div>
                   <p className="font-semibold text-white text-[0.9375rem]">{school.name}</p>
-                  <p className="text-xs text-[var(--text-tertiary)] mt-0.5">Tap to select</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>Tap to select</p>
                 </div>
-                <svg className="ml-auto text-[var(--text-tertiary)]" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <svg className="ml-auto shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'var(--text-tertiary)' }}>
                   <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
@@ -465,7 +475,7 @@ function SchoolStep({
         </div>
       )}
       {schoolError && <ErrorNote>{schoolError}</ErrorNote>}
-    </GlassCard>
+    </div>
   );
 }
 
@@ -498,9 +508,12 @@ function ClassStep({
 }) {
   if (!classAction) {
     return (
-      <GlassCard className="p-6 space-y-4">
+      <div
+        className="rounded-[var(--radius-xl)] p-6 space-y-4"
+        style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+      >
         <BackButton onClick={onBack} label="School" />
-        <p className="text-[var(--text-secondary)] text-sm">What would you like to do?</p>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>What would you like to do?</p>
         <div className="space-y-2.5">
           <OptionCard
             icon="✨"
@@ -515,12 +528,15 @@ function ClassStep({
             onClick={() => onActionSelect('join')}
           />
         </div>
-      </GlassCard>
+      </div>
     );
   }
 
   return (
-    <GlassCard className="p-6 space-y-5">
+    <div
+      className="rounded-[var(--radius-xl)] p-6 space-y-5"
+      style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+    >
       <BackButton onClick={() => onActionSelect(null)} label="Choose option" />
       <form onSubmit={classAction === 'create' ? onCreateClass : onJoinClass} className="space-y-4">
         {classAction === 'create' ? (
@@ -549,7 +565,7 @@ function ClassStep({
           {classAction === 'create' ? 'Create class' : 'Join class'}
         </Button>
       </form>
-    </GlassCard>
+    </div>
   );
 }
 
@@ -565,7 +581,15 @@ function DoneStep({
   onEnter: () => void;
 }) {
   return (
-    <GlassCard glow className="p-8 text-center space-y-6">
+    <div
+      className="rounded-[var(--radius-xl)] p-8 text-center space-y-6"
+      style={{
+        background: 'var(--surface-1)',
+        border: '1px solid rgba(247,54,94,0.35)',
+        boxShadow: '0 0 40px rgba(247,54,94,0.1)',
+      }}
+    >
+      <div className="h-1" style={{ background: 'linear-gradient(90deg, #f7365e, #c026d3, #7c5cfc)', borderRadius: '0 0 4px 4px', marginTop: -32, marginLeft: -32, marginRight: -32 }} />
       <motion.div
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -575,22 +599,22 @@ function DoneStep({
         🎉
       </motion.div>
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-white">You&apos;re in!</h2>
+        <h2 className="text-heading text-white">You&apos;re in!</h2>
         {schoolName && (
-          <p className="text-[var(--text-secondary)] text-sm">
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             <span className="text-white font-medium">{schoolName}</span>
-            <span className="mx-1.5 text-[var(--text-tertiary)]">·</span>
-            <span className="text-pink-400 font-medium">{className}</span>
+            <span className="mx-1.5" style={{ color: 'var(--text-tertiary)' }}>·</span>
+            <span className="font-medium" style={{ color: 'var(--pink-light)' }}>{className}</span>
           </p>
         )}
-        <p className="text-[var(--text-secondary)] text-sm">Start connecting with your classmates</p>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Start connecting with your classmates</p>
       </div>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         <Button variant="primary" size="lg" onClick={onEnter} className="w-full">
-          Enter class
+          Enter class →
         </Button>
       </motion.div>
-    </GlassCard>
+    </div>
   );
 }
 
@@ -612,17 +636,21 @@ function OptionCard({
       whileHover={{ scale: 1.01, y: -1 }}
       whileTap={{ scale: 0.99 }}
       onClick={onClick}
-      className="w-full text-left px-4 py-4 rounded-[var(--radius-md)] bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface-3)] hover:border-[var(--border-accent)] transition-colors group"
+      className="w-full text-left px-4 py-4 rounded-[var(--radius-md)] transition-colors group"
+      style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
     >
       <div className="flex items-center gap-3.5">
-        <div className="h-10 w-10 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-xl shrink-0 group-hover:border-[var(--pink)] transition-colors">
+        <div
+          className="h-10 w-10 rounded-xl flex items-center justify-center text-xl shrink-0"
+          style={{ background: 'var(--surface-3)', border: '1px solid var(--border)' }}
+        >
           {icon}
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-white text-[0.9375rem] leading-tight">{title}</p>
-          <p className="text-[0.8125rem] text-[var(--text-secondary)] mt-0.5">{description}</p>
+          <p className="text-[0.8125rem] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{description}</p>
         </div>
-        <svg className="text-[var(--text-tertiary)] group-hover:text-[var(--text-secondary)] transition-colors shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <svg className="shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'var(--text-tertiary)' }}>
           <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
@@ -650,7 +678,8 @@ function ErrorNote({ children }: { children: React.ReactNode }) {
     <motion.div
       initial={{ opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#2a1520] border border-[#4a1a28] rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm text-red-300"
+      className="rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm"
+      style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171' }}
     >
       {children}
     </motion.div>

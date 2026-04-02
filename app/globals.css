@@ -4,6 +4,390 @@
 @source "../components/**/*.{ts,tsx}";
 @source "../lib/**/*.{ts,tsx}";
 
+/* ──────────────────────────────────────────────────
+   Design tokens — Lando-Norris-inspired × Likewise
+────────────────────────────────────────────────── */
+:root {
+  /* ── Core surfaces ── */
+  --bg:             #060610;
+  --bg-mid:         #09091a;
+  --surface-1:      #0f0f22;
+  --surface-2:      #161630;
+  --surface-3:      #1e1e3a;
+  --surface-raised: #181832;
+
+  /* ── Borders ── */
+  --border:         #252540;
+  --border-subtle:  #1a1a32;
+  --border-strong:  #3a3a60;
+  --border-accent:  rgba(247, 54, 94, 0.5);
+
+  /* ── Brand ── */
+  --pink:           #f7365e;
+  --pink-light:     #ff6b8a;
+  --pink-dark:      #c4173d;
+  --pink-dim:       rgba(247, 54, 94, 0.1);
+  --pink-glow:      0 0 40px rgba(247, 54, 94, 0.3), 0 6px 20px rgba(247, 54, 94, 0.2);
+  --pink-glow-sm:   0 0 16px rgba(247, 54, 94, 0.25);
+  --violet:         #7c5cfc;
+
+  /* ── Text ── */
+  --text-primary:   #ffffff;
+  --text-secondary: #8888b0;
+  --text-tertiary:  #55557a;
+  --text-muted:     #303050;
+
+  /* ── Radii ── */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
+
+  /* ── Shadows ── */
+  --shadow-xs:   0 1px 3px rgba(0,0,0,0.5);
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:   0 6px 24px rgba(0,0,0,0.65), 0 2px 6px rgba(0,0,0,0.4);
+  --shadow-lg:   0 16px 56px rgba(0,0,0,0.75), 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-xl:   0 24px 80px rgba(0,0,0,0.85), 0 8px 20px rgba(0,0,0,0.5);
+  --shadow-pink: 0 8px 36px rgba(247,54,94,0.4), 0 2px 10px rgba(247,54,94,0.25);
+
+  /* ── Transitions ── */
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:   cubic-bezier(0.64, 0, 0.78, 0);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast:  0.12s;
+  --t-base:  0.22s;
+  --t-slow:  0.38s;
+}
+
+/* ──────────────────────────────────────────────────
+   Reset
+────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ──────────────────────────────────────────────────
+   Base
+────────────────────────────────────────────────── */
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.015em;
+  overflow-x: hidden;
+}
+
+/* Next.js root div must stretch */
+body > div:first-child,
+#__next {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* ──────────────────────────────────────────────────
+   Scrollbar
+────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 100px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* ──────────────────────────────────────────────────
+   Selection & focus
+────────────────────────────────────────────────── */
+::selection { background: rgba(247, 54, 94, 0.28); color: white; }
+
+:focus-visible {
+  outline: 2px solid rgba(247, 54, 94, 0.5);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ──────────────────────────────────────────────────
+   Body utility class
+────────────────────────────────────────────────── */
+.lw-body {
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ──────────────────────────────────────────────────
+   Page container — always centered
+────────────────────────────────────────────────── */
+.lw-page {
+  flex: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lw-page-top {
+  flex: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ──────────────────────────────────────────────────
+   Typography
+────────────────────────────────────────────────── */
+.text-display {
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+}
+
+.text-heading {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.text-title {
+  font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.text-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* ──────────────────────────────────────────────────
+   Gradient text
+────────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #ff6b8a 0%, #f7365e 40%, #c026d3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-animated {
+  background: linear-gradient(135deg, #ff8fa3, #f7365e, #c026d3, #7c5cfc, #f7365e, #ff8fa3);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 6s ease infinite;
+}
+
+/* ──────────────────────────────────────────────────
+   Keyframes
+────────────────────────────────────────────────── */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes heart-pop {
+  0%   { transform: scale(1); }
+  15%  { transform: scale(1.5); }
+  30%  { transform: scale(0.88); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(247, 54, 94, 0.6); }
+  50%       { box-shadow: 0 0 0 6px rgba(247, 54, 94, 0); }
+}
+
+@keyframes stripe-slide {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+@keyframes scan-line {
+  0%   { top: -2px; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ──────────────────────────────────────────────────
+   Animation utilities
+────────────────────────────────────────────────── */
+.animate-float       { animation: float 4s ease-in-out infinite; }
+.animate-heart-pop   { animation: heart-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.animate-slide-up    { animation: slide-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.animate-fade-in     { animation: fade-in 0.35s ease forwards; }
+.ring-pulse          { animation: pulse-ring 2.5s ease-in-out infinite; }
+
+/* ──────────────────────────────────────────────────
+   Shimmer skeleton
+────────────────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface-1) 25%,
+    var(--surface-2) 50%,
+    var(--surface-1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease infinite;
+}
+
+/* ──────────────────────────────────────────────────
+   Cards & surfaces
+────────────────────────────────────────────────── */
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-interactive {
+  cursor: pointer;
+  transition:
+    background var(--t-base) ease,
+    border-color var(--t-base) ease,
+    transform var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) ease;
+}
+
+.card-interactive:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ──────────────────────────────────────────────────
+   Decorative stripe accent (LN-inspired)
+────────────────────────────────────────────────── */
+.stripe-accent {
+  position: relative;
+  overflow: hidden;
+}
+
+.stripe-accent::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #f7365e, #c026d3);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ──────────────────────────────────────────────────
+   Noise overlay (subtle texture)
+────────────────────────────────────────────────── */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.03;
+}
+
+/* ──────────────────────────────────────────────────
+   Dot grid (landing bg)
+────────────────────────────────────────────────── */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ──────────────────────────────────────────────────
+   Grid bg lines (LN-inspired)
+────────────────────────────────────────────────── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ──────────────────────────────────────────────────
+   Misc utilities
+────────────────────────────────────────────────── */
+.divider { height: 1px; background: var(--border); }
+
+.mono {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  letter-spacing: 0.08em;
+}
+
+.glow-pink {
+  box-shadow: var(--shadow-pink);
+}
+
+/* Hover row utility — avoids inline onMouseEnter/Leave handlers */
+.hover-row {
+  transition: background var(--t-base) ease;
+}
+.hover-row:hover {
+  background: var(--surface-2) !important;
+}
+
+.text-balance { text-wrap: balance; }
+
+
 :root {
   /* Core palette */
   --bg:           #0c0c16;

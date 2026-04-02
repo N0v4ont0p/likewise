@@ -12,12 +12,10 @@ import {
   likeUser,
   unlikeUser,
 } from '@/lib/firestore';
-import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
-import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Group, Membership, School } from '@/types';
 import Link from 'next/link';
@@ -25,7 +23,6 @@ import dynamic from 'next/dynamic';
 
 const ReactConfetti = dynamic(() => import('react-confetti'), { ssr: false });
 
-/* SVG Heart icon */
 function HeartIcon({ filled, className }: { filled: boolean; className?: string }) {
   return (
     <svg
@@ -135,7 +132,7 @@ export default function ClassPage() {
 
   if (loadingGroup) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="lw-page">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -143,19 +140,22 @@ export default function ClassPage() {
 
   if (!group) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-5">
-        <GlassCard className="max-w-sm w-full overflow-hidden">
-          <EmptyState
-            icon="🔍"
-            title="Class not found"
-            description="This class may have been removed or the link is invalid."
-            action={
-              <Button variant="secondary" size="sm" onClick={() => router.push('/dashboard')}>
-                Back to home
-              </Button>
-            }
-          />
-        </GlassCard>
+      <div className="lw-page px-5">
+        <div
+          className="max-w-sm w-full rounded-[var(--radius-xl)] overflow-hidden text-center p-10 space-y-5"
+          style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+        >
+          <div className="text-5xl">🔍</div>
+          <div>
+            <h3 className="text-title text-white">Class not found</h3>
+            <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
+              This class may have been removed or the link is invalid.
+            </p>
+          </div>
+          <Button variant="secondary" size="sm" onClick={() => router.push('/dashboard')}>
+            Back to home
+          </Button>
+        </div>
       </div>
     );
   }
@@ -164,7 +164,7 @@ export default function ClassPage() {
   const likedCount = otherMembers.filter((m) => likedUserIds.has(m.userId)).length;
 
   return (
-    <div className="min-h-screen">
+    <div className="lw-page-top" style={{ background: 'var(--bg)' }}>
       {confetti && (
         <ReactConfetti
           width={windowSize.width}
@@ -176,7 +176,14 @@ export default function ClassPage() {
         />
       )}
 
-      <div className="max-w-lg mx-auto px-5 py-8 space-y-5">
+      {/* Top accent line */}
+      <div
+        className="pointer-events-none fixed top-0 left-0 right-0 h-px z-50"
+        style={{ background: 'linear-gradient(90deg, transparent, #f7365e, transparent)' }}
+        aria-hidden="true"
+      />
+
+      <div className="max-w-lg mx-auto px-5 pt-10 pb-12 space-y-5">
         {/* Header */}
         <PageHeader
           title={group.name}
@@ -198,56 +205,57 @@ export default function ClassPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.07, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          className="rounded-[var(--radius-xl)] p-5"
+          style={{ background: 'var(--surface-1)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}
         >
-          <GlassCard className="p-4">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-[0.65rem] text-[var(--text-tertiary)] uppercase tracking-[0.12em] font-semibold mb-1.5">
-                  Invite code
-                </p>
-                <p className="font-mono text-[1.7rem] font-black text-[var(--pink)] tracking-[0.22em] leading-none">
-                  {group.inviteCode}
-                </p>
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.94 }}
-                onClick={copyInviteCode}
-                className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--radius-md)] text-sm font-semibold border transition-all duration-150 ${
-                  copied
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'bg-[var(--surface-2)] border-[var(--border)] text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-3)]'
-                }`}
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-label mb-2" style={{ color: 'var(--text-tertiary)' }}>INVITE CODE</p>
+              <p
+                className="font-mono text-[2rem] font-black tracking-[0.22em] leading-none"
+                style={{ color: 'var(--pink)' }}
               >
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={copied ? 'check' : 'copy'}
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.5, opacity: 0 }}
-                    transition={{ duration: 0.18 }}
-                    className="flex items-center gap-1.5"
-                  >
-                    {copied ? (
-                      <>
-                        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                          <path d="M2 6.5l3.5 3.5L11 3" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                        Copied
-                      </>
-                    ) : (
-                      <>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
-                        </svg>
-                        Copy
-                      </>
-                    )}
-                  </motion.span>
-                </AnimatePresence>
-              </motion.button>
+                {group.inviteCode}
+              </p>
             </div>
-          </GlassCard>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.94 }}
+              onClick={copyInviteCode}
+              className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--radius-md)] text-sm font-semibold border transition-all duration-150"
+              style={copied
+                ? { background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399' }
+                : { background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }
+              }
+            >
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={copied ? 'check' : 'copy'}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.5, opacity: 0 }}
+                  transition={{ duration: 0.18 }}
+                  className="flex items-center gap-1.5"
+                >
+                  {copied ? (
+                    <>
+                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                        <path d="M2 6.5l3.5 3.5L11 3" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                      </svg>
+                      Copy
+                    </>
+                  )}
+                </motion.span>
+              </AnimatePresence>
+            </motion.button>
+          </div>
         </motion.div>
 
         {/* Stats row */}
@@ -258,30 +266,35 @@ export default function ClassPage() {
             transition={{ delay: 0.11, duration: 0.32 }}
             className="grid grid-cols-2 gap-2.5"
           >
-            <div className="rounded-[var(--radius-md)] bg-[var(--surface-1)] border border-[var(--border)] p-3.5 text-center shadow-[var(--shadow-sm)]">
-              <p className="text-[1.375rem] font-black text-white tabular-nums">{otherMembers.length}</p>
-              <p className="text-[0.7rem] text-[var(--text-secondary)] mt-0.5 font-medium">Classmates</p>
+            <div
+              className="rounded-[var(--radius-md)] p-4 text-center"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+            >
+              <p className="text-[1.5rem] font-black text-white tabular-nums">{otherMembers.length}</p>
+              <p className="text-[0.7rem] font-medium mt-0.5" style={{ color: 'var(--text-secondary)' }}>Classmates</p>
             </div>
-            <div className="rounded-[var(--radius-md)] bg-[var(--surface-1)] border border-[rgba(247,54,94,0.25)] p-3.5 text-center shadow-[var(--shadow-sm)]">
-              <p className="text-[1.375rem] font-black text-[var(--pink)] tabular-nums">{likedCount}</p>
-              <p className="text-[0.7rem] text-[var(--text-secondary)] mt-0.5 font-medium">You liked</p>
+            <div
+              className="rounded-[var(--radius-md)] p-4 text-center"
+              style={{ background: 'rgba(247,54,94,0.06)', border: '1px solid rgba(247,54,94,0.2)' }}
+            >
+              <p className="text-[1.5rem] font-black tabular-nums" style={{ color: 'var(--pink)' }}>{likedCount}</p>
+              <p className="text-[0.7rem] font-medium mt-0.5" style={{ color: 'var(--text-secondary)' }}>You liked</p>
             </div>
           </motion.div>
         )}
 
-        {/* Members list */}
+        {/* Members */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[0.65rem] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.12em]">
-              Classmates
-            </p>
+            <p className="text-label" style={{ color: 'var(--text-tertiary)' }}>CLASSMATES</p>
             <AnimatePresence>
               {likeError && (
                 <motion.p
                   initial={{ opacity: 0, x: 6 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0 }}
-                  className="text-xs text-red-400 font-medium"
+                  className="text-xs font-medium"
+                  style={{ color: '#f87171' }}
                 >
                   {likeError}
                 </motion.p>
@@ -290,13 +303,18 @@ export default function ClassPage() {
           </div>
 
           {otherMembers.length === 0 ? (
-            <GlassCard className="overflow-hidden">
-              <EmptyState
-                icon="👋"
-                title="No classmates yet"
-                description="Share the invite code to get people into this class"
-              />
-            </GlassCard>
+            <div
+              className="rounded-[var(--radius-xl)] p-10 text-center space-y-4"
+              style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+            >
+              <div className="text-4xl">👋</div>
+              <div>
+                <h3 className="text-title text-white">No classmates yet</h3>
+                <p className="text-sm mt-1.5" style={{ color: 'var(--text-secondary)' }}>
+                  Share the invite code to get people into this class
+                </p>
+              </div>
+            </div>
           ) : (
             <div className="space-y-2">
               {otherMembers.map((member, i) => {
@@ -312,21 +330,19 @@ export default function ClassPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.045, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <GlassCard
-                      className={`p-4 transition-all duration-200 ${
-                        isLiked ? 'border-[rgba(247,54,94,0.35)] bg-[#180e14]' : ''
-                      }`}
+                    <div
+                      className="rounded-[var(--radius-lg)] p-4 transition-all duration-200"
+                      style={{
+                        background: isLiked ? 'rgba(247,54,94,0.06)' : 'var(--surface-1)',
+                        border: isLiked ? '1px solid rgba(247,54,94,0.3)' : '1px solid var(--border)',
+                      }}
                     >
                       <div className="flex items-center gap-3.5">
                         <Avatar name={displayName} size="md" showRing={isLiked} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <p className="font-semibold text-white text-[0.9375rem] truncate">
-                              {displayName}
-                            </p>
-                            {member.role === 'owner' && (
-                              <Badge variant="pink" size="sm">Owner</Badge>
-                            )}
+                            <p className="font-semibold text-white text-[0.9375rem] truncate">{displayName}</p>
+                            {member.role === 'owner' && <Badge variant="pink" size="sm">Owner</Badge>}
                           </div>
                           <AnimatePresence>
                             {isLiked && (
@@ -334,7 +350,8 @@ export default function ClassPage() {
                                 initial={{ opacity: 0, y: 3 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -3 }}
-                                className="text-[0.7rem] text-[var(--pink-light)] mt-0.5 font-medium"
+                                className="text-[0.7rem] mt-0.5 font-medium"
+                                style={{ color: 'var(--pink-light)' }}
                               >
                                 ✦ You liked them
                               </motion.p>
@@ -342,7 +359,7 @@ export default function ClassPage() {
                           </AnimatePresence>
                         </div>
 
-                        {/* SVG Heart like button */}
+                        {/* Heart button */}
                         <motion.button
                           whileTap={{ scale: isPending ? 1 : 0.78 }}
                           whileHover={{ scale: isPending ? 1 : 1.12 }}
@@ -350,36 +367,26 @@ export default function ClassPage() {
                           onClick={() => handleLike(member)}
                           disabled={isPending}
                           aria-label={isLiked ? 'Unlike' : 'Like'}
-                          className={`relative h-11 w-11 rounded-full flex items-center justify-center transition-colors duration-200 shrink-0 ${
-                            isLiked
-                              ? 'bg-[#2a0f1a] border border-[rgba(247,54,94,0.55)] text-[var(--pink)]'
-                              : 'bg-[var(--surface-2)] border border-[var(--border)] text-[var(--text-tertiary)] hover:border-[rgba(247,54,94,0.4)] hover:text-[var(--pink)] hover:bg-[#200d16]'
-                          } disabled:opacity-50 disabled:cursor-not-allowed`}
+                          className="relative h-11 w-11 rounded-full flex items-center justify-center shrink-0 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          style={isLiked
+                            ? { background: 'rgba(247,54,94,0.12)', border: '1px solid rgba(247,54,94,0.5)', color: 'var(--pink)' }
+                            : { background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--text-tertiary)' }
+                          }
                         >
                           <AnimatePresence mode="wait">
                             {isPending ? (
-                              <motion.span
-                                key="pending"
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                exit={{ scale: 0 }}
-                                className="absolute"
-                              >
+                              <motion.span key="pending" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="absolute">
                                 <LoadingSpinner size="xs" />
                               </motion.span>
                             ) : (
                               <motion.span
                                 key={isLiked ? 'liked' : 'unliked'}
                                 initial={{ scale: 0.5, opacity: 0 }}
-                                animate={{
-                                  scale: isJustLiked ? [1, 1.45, 0.88, 1.18, 1] : 1,
-                                  opacity: 1,
-                                }}
+                                animate={{ scale: isJustLiked ? [1, 1.45, 0.88, 1.18, 1] : 1, opacity: 1 }}
                                 exit={{ scale: 0.5, opacity: 0 }}
-                                transition={
-                                  isJustLiked
-                                    ? { duration: 0.55, times: [0, 0.15, 0.3, 0.5, 1] }
-                                    : { type: 'spring', stiffness: 500, damping: 18 }
+                                transition={isJustLiked
+                                  ? { duration: 0.55, times: [0, 0.15, 0.3, 0.5, 1] }
+                                  : { type: 'spring', stiffness: 500, damping: 18 }
                                 }
                                 className="flex items-center justify-center"
                               >
@@ -389,7 +396,7 @@ export default function ClassPage() {
                           </AnimatePresence>
                         </motion.button>
                       </div>
-                    </GlassCard>
+                    </div>
                   </motion.div>
                 );
               })}
@@ -406,7 +413,8 @@ export default function ClassPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-[rgba(0,0,0,0.88)]"
+            className="fixed inset-0 z-50 flex items-center justify-center p-5"
+            style={{ background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(6px)' }}
             onClick={() => setShowMatch(null)}
           >
             <motion.div
@@ -417,18 +425,25 @@ export default function ClassPage() {
               className="w-full max-w-[340px]"
               onClick={(e) => e.stopPropagation()}
             >
-              <GlassCard glow className="overflow-hidden">
-                {/* Top gradient bar */}
-                <div className="h-1.5 bg-gradient-to-r from-[#f7365e] via-[#c026d3] to-[#7c5cfc]" />
+              <div
+                className="overflow-hidden rounded-[var(--radius-xl)]"
+                style={{
+                  background: 'var(--surface-1)',
+                  border: '1px solid rgba(247,54,94,0.4)',
+                  boxShadow: '0 0 60px rgba(247,54,94,0.25), var(--shadow-xl)',
+                }}
+              >
+                {/* Gradient bar */}
+                <div className="h-1.5" style={{ background: 'linear-gradient(90deg, #f7365e, #c026d3, #7c5cfc)' }} />
 
                 <div className="p-8 text-center space-y-5">
-                  {/* Animated hearts */}
-                  <div className="relative flex items-center justify-center">
+                  <div className="flex items-center justify-center">
                     <motion.div
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: 0.1, type: 'spring', stiffness: 300, damping: 15 }}
-                      className="h-20 w-20 rounded-full bg-gradient-to-br from-[#f7365e] to-[#f06233] flex items-center justify-center shadow-[var(--shadow-pink)]"
+                      className="h-20 w-20 rounded-full flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg, #f7365e, #f06233)', boxShadow: 'var(--shadow-pink)' }}
                     >
                       <motion.div
                         animate={{ scale: [1, 1.15, 1, 1.08, 1] }}
@@ -454,10 +469,11 @@ export default function ClassPage() {
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.26, duration: 0.38 }}
-                      className="text-[var(--text-secondary)] text-[0.9375rem] leading-relaxed"
+                      className="text-[0.9375rem] leading-relaxed"
+                      style={{ color: 'var(--text-secondary)' }}
                     >
                       You and{' '}
-                      <span className="text-[var(--pink-light)] font-bold">{showMatch.username}</span>{' '}
+                      <span className="font-bold" style={{ color: 'var(--pink-light)' }}>{showMatch.username}</span>{' '}
                       like each other 💝
                     </motion.p>
                   </div>
@@ -469,19 +485,18 @@ export default function ClassPage() {
                     className="space-y-2.5 pt-1"
                   >
                     <Link href={`/class/${id}/matches`} onClick={() => setShowMatch(null)}>
-                      <Button variant="primary" size="md" className="w-full">
-                        See your matches
-                      </Button>
+                      <Button variant="primary" size="md" className="w-full">See your matches</Button>
                     </Link>
                     <button
                       onClick={() => setShowMatch(null)}
-                      className="w-full text-[var(--text-secondary)] text-sm hover:text-white transition-colors py-1 font-medium"
+                      className="w-full text-sm py-1 font-medium transition-colors"
+                      style={{ color: 'var(--text-secondary)' }}
                     >
                       Continue browsing
                     </button>
                   </motion.div>
                 </div>
-              </GlassCard>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -489,3 +504,5 @@ export default function ClassPage() {
     </div>
   );
 }
+
+

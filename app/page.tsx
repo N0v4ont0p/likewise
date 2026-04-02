@@ -32,10 +32,12 @@ const features = [
   },
 ];
 
+const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } },
 };
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -200,7 +202,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: i * 0.1, duration: 0.5, ease: EASE_OUT }}
             >
               <div
                 className="group relative flex items-center gap-5 rounded-[var(--radius-lg)] px-5 py-5 overflow-hidden card-interactive"
@@ -245,7 +247,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ delay: 0.3, duration: 0.5, ease: EASE_OUT }}
             className="pt-6"
           >
             <Link href="/signup" className="block">

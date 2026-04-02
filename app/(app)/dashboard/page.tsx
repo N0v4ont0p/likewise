@@ -246,10 +246,8 @@ export default function DashboardPage() {
                   {/* School header */}
                   <button
                     onClick={() => toggleSchool(school.id)}
-                    className="w-full flex items-center gap-3.5 p-4 transition-colors"
+                    className="hover-row w-full flex items-center gap-3.5 p-4"
                     style={{ background: 'transparent' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-2)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <div
                       className="h-9 w-9 rounded-xl flex items-center justify-center text-base shrink-0"
@@ -292,10 +290,8 @@ export default function DashboardPage() {
                             classes.map((cls) => (
                               <Link key={cls.id} href={`/class/${cls.id}`}>
                                 <div
-                                  className="flex items-center gap-3 px-4 py-3 pl-[3.875rem] transition-colors"
+                                  className="hover-row flex items-center gap-3 px-4 py-3 pl-[3.875rem]"
                                   style={{ borderBottom: '1px solid var(--border-subtle)' }}
-                                  onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-2)')}
-                                  onMouseLeave={(e) => (e.currentTarget.style.background = '')}
                                 >
                                   <div
                                     className="h-7 w-7 rounded-lg flex items-center justify-center text-xs shrink-0"

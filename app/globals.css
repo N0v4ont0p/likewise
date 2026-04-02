@@ -377,6 +377,14 @@ body > div:first-child,
   box-shadow: var(--shadow-pink);
 }
 
+/* Hover row utility — avoids inline onMouseEnter/Leave handlers */
+.hover-row {
+  transition: background var(--t-base) ease;
+}
+.hover-row:hover {
+  background: var(--surface-2) !important;
+}
+
 .text-balance { text-wrap: balance; }
 
 

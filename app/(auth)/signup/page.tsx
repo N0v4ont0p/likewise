@@ -237,6 +237,7 @@ export default function SignupPage() {
               variant="primary"
               size="lg"
               loading={loading}
+              disabled={!canSubmit}
               className="w-full font-semibold mt-1"
             >
               Create account →

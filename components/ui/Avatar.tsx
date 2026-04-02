@@ -3,12 +3,12 @@
 import { cn } from '@/lib/utils';
 
 const GRADIENTS: [string, string][] = [
-  ['#f7365e', '#f06233'],
-  ['#7c5cfc', '#c026d3'],
-  ['#e11d48', '#f59e0b'],
-  ['#0ea5e9', '#6366f1'],
-  ['#10b981', '#0ea5e9'],
-  ['#f59e0b', '#ef4444'],
+  ['#3b82f6', '#06b6d4'],
+  ['#6366f1', '#3b82f6'],
+  ['#0ea5e9', '#06b6d4'],
+  ['#8b5cf6', '#6366f1'],
+  ['#06b6d4', '#0ea5e9'],
+  ['#3b82f6', '#6366f1'],
 ];
 
 const getGradient = (name: string): [string, string] => {
@@ -47,7 +47,7 @@ export const Avatar = ({ name, size = 'md', className, showRing = false, badge, 
         style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
         className={cn(
           'h-full w-full rounded-full flex items-center justify-center font-bold text-white select-none shadow-md',
-          showRing && 'ring-[2.5px] ring-[var(--pink)] ring-offset-[3px] ring-offset-[var(--bg)]',
+          showRing && 'ring-[2.5px] ring-[var(--blue)] ring-offset-[3px] ring-offset-[var(--bg)]',
           showRing && pulse && 'ring-pulse',
         )}
       >
@@ -63,6 +63,8 @@ export const Avatar = ({ name, size = 'md', className, showRing = false, badge, 
           <span>{badge}</span>
         </div>
       )}
+
     </div>
   );
 };
+

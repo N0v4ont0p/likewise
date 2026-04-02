@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signUp } from '@/lib/auth';
@@ -15,7 +15,7 @@ const passwordRequirements = [
   { test: (p: string) => /[^A-Za-z0-9]/.test(p), label: 'One special character' },
 ];
 
-const strengthColors = ['#ef4444', '#f97316', '#eab308', '#10b981'];
+const strengthColors = ['#ef4444', '#f97316', '#3b82f6', '#06b6d4'];
 const strengthLabels = ['Weak', 'Fair', 'Good', 'Strong'];
 
 export default function SignupPage() {
@@ -76,43 +76,24 @@ export default function SignupPage() {
 
   return (
     <div className="lw-page px-5 py-10">
-      {/* Background glow */}
       <div
         className="pointer-events-none fixed inset-0 z-0"
-        style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(124,92,252,0.06) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(59,130,246,0.06) 0%, transparent 70%)' }}
         aria-hidden="true"
       />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-[400px] space-y-8 relative z-10"
       >
-        {/* Logo */}
-        <div className="text-center space-y-4">
-          <motion.div
-            animate={{ y: [0, -5, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="inline-flex"
-          >
-            <div
-              className="h-16 w-16 rounded-2xl flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, #7c5cfc, #c026d3)',
-                boxShadow: '0 0 32px rgba(124,92,252,0.4)',
-              }}
-            >
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
-            </div>
-          </motion.div>
+        {/* Wordmark */}
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-bold gradient-text">Likewise</h1>
           <div>
-            <h1 className="text-heading text-white">Create account</h1>
-            <p className="text-[0.9rem] mt-2" style={{ color: 'var(--text-secondary)' }}>
-              Join Likewise for free
-            </p>
+            <p className="text-[1.25rem] font-bold" style={{ color: 'var(--text-primary)' }}>Create your account</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Join Likewise and connect with your class</p>
           </div>
         </div>
 
@@ -187,11 +168,11 @@ export default function SignupPage() {
                           <div key={i} className="flex items-center gap-2">
                             <div
                               className="h-2 w-2 rounded-full shrink-0 transition-colors duration-300"
-                              style={{ background: met ? '#10b981' : 'var(--surface-3)' }}
+                              style={{ background: met ? 'var(--blue)' : 'var(--surface-3)' }}
                             />
                             <span
                               className="text-[0.6875rem] transition-colors duration-300"
-                              style={{ color: met ? '#10b981' : 'var(--text-muted)' }}
+                              style={{ color: met ? 'var(--blue-light)' : 'var(--text-tertiary)' }}
                             >
                               {req.label}
                             </span>
@@ -257,7 +238,7 @@ export default function SignupPage() {
               size="lg"
               loading={loading}
               disabled={!canSubmit}
-              className="w-full font-bold text-[1rem] mt-1"
+              className="w-full font-semibold mt-1"
             >
               Create account →
             </Button>
@@ -265,11 +246,11 @@ export default function SignupPage() {
         </div>
 
         <p className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link
             href="/login"
             className="font-semibold transition-colors"
-            style={{ color: 'var(--pink-light)' }}
+            style={{ color: 'var(--blue-light)' }}
           >
             Sign in
           </Link>
@@ -278,5 +259,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
-

@@ -36,7 +36,7 @@ export const EmptyState = ({ icon, title, description, action, className }: Empt
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.15, duration: 0.3 }}
-      className="text-[1.0625rem] font-semibold text-white"
+      className="text-[1.0625rem] font-semibold text-[var(--text-primary)]"
     >
       {title}
     </motion.h3>
@@ -45,7 +45,8 @@ export const EmptyState = ({ icon, title, description, action, className }: Empt
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.3 }}
-        className="text-sm text-[var(--text-secondary)] max-w-xs"
+        className="text-sm max-w-xs"
+        style={{ color: 'var(--text-secondary)' }}
       >
         {description}
       </motion.p>
@@ -62,3 +63,4 @@ export const EmptyState = ({ icon, title, description, action, className }: Empt
     )}
   </motion.div>
 );
+

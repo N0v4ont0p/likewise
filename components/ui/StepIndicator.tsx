@@ -27,22 +27,22 @@ export const StepIndicator = ({ steps, currentStep, className }: StepIndicatorPr
               <motion.div
                 animate={{
                   background: isCompleted
-                    ? 'linear-gradient(135deg, #f7365e, #f06233)'
+                    ? '#3b82f6'
                     : isActive
-                    ? 'rgba(247,54,94,0.18)'
+                    ? 'rgba(59,130,246,0.12)'
                     : 'rgba(255,255,255,0.04)',
                   borderColor: isCompleted
-                    ? 'rgba(247,54,94,0.7)'
+                    ? '#3b82f6'
                     : isActive
-                    ? 'rgba(247,54,94,0.55)'
+                    ? 'rgba(59,130,246,0.6)'
                     : 'rgba(255,255,255,0.08)',
-                  scale: isActive ? 1.1 : 1,
+                  scale: isActive ? 1.08 : 1,
                   boxShadow: isActive
-                    ? '0 0 0 4px rgba(247,54,94,0.15)'
-                    : '0 0 0 0px rgba(247,54,94,0)',
+                    ? '0 0 0 4px rgba(59,130,246,0.15)'
+                    : '0 0 0 0px rgba(59,130,246,0)',
                 }}
                 transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                className="h-9 w-9 rounded-full border-2 flex items-center justify-center text-sm"
+                className="h-8 w-8 rounded-full border-2 flex items-center justify-center text-sm font-semibold text-white"
               >
                 {isCompleted ? (
                   <motion.svg
@@ -63,8 +63,8 @@ export const StepIndicator = ({ steps, currentStep, className }: StepIndicatorPr
                     />
                   </motion.svg>
                 ) : (
-                  <span className={cn('text-sm', isActive ? 'opacity-100' : 'opacity-30')}>
-                    {step.icon}
+                  <span className={cn('text-xs font-bold', isActive ? 'text-[var(--blue-light)]' : 'text-[var(--text-tertiary)]')}>
+                    {index + 1}
                   </span>
                 )}
               </motion.div>
@@ -72,10 +72,10 @@ export const StepIndicator = ({ steps, currentStep, className }: StepIndicatorPr
                 className={cn(
                   'text-[0.625rem] font-semibold transition-colors whitespace-nowrap tracking-wide',
                   isActive
-                    ? 'text-[var(--pink-light)]'
+                    ? 'text-[var(--blue-light)]'
                     : isCompleted
-                    ? 'text-[var(--text-tertiary)]'
-                    : 'text-[var(--text-muted)]'
+                    ? 'text-[var(--text-secondary)]'
+                    : 'text-[var(--text-tertiary)]'
                 )}
               >
                 {step.label}
@@ -85,7 +85,8 @@ export const StepIndicator = ({ steps, currentStep, className }: StepIndicatorPr
             {index < steps.length - 1 && (
               <div className="relative flex-1 h-[2px] mx-2 mb-4 rounded-full overflow-hidden bg-[var(--surface-3)]">
                 <motion.div
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-[#f7365e] to-[#c026d3] origin-left"
+                  className="absolute inset-0 rounded-full origin-left"
+                  style={{ background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }}
                   animate={{ scaleX: isCompleted ? 1 : 0 }}
                   transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 />

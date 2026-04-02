@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 
 interface BadgeProps {
   children: ReactNode;
-  variant?: 'default' | 'pink' | 'violet' | 'success' | 'error' | 'muted';
+  variant?: 'default' | 'blue' | 'violet' | 'success' | 'error' | 'muted';
   size?: 'sm' | 'md';
   className?: string;
 }
@@ -13,10 +13,10 @@ interface BadgeProps {
 export const Badge = ({ children, variant = 'default', size = 'sm', className }: BadgeProps) => {
   const variants = {
     default: 'bg-[var(--surface-3)] text-[var(--text-secondary)] border-[var(--border)]',
-    pink:    'bg-[#2a1020] text-[#ff7090] border-[#4a1a35]',
-    violet:  'bg-[#1a1230] text-[#a78bfa] border-[#2e2050]',
-    success: 'bg-[#0d2218] text-emerald-400 border-[#1a3d2a]',
-    error:   'bg-[#2a1020] text-red-400 border-[#4a1a28]',
+    blue:    'bg-[rgba(59,130,246,0.1)] text-[#60a5fa] border-[rgba(59,130,246,0.25)]',
+    violet:  'bg-[rgba(139,92,246,0.1)] text-[#a78bfa] border-[rgba(139,92,246,0.25)]',
+    success: 'bg-[rgba(16,185,129,0.08)] text-emerald-400 border-[rgba(16,185,129,0.2)]',
+    error:   'bg-[rgba(239,68,68,0.08)] text-red-400 border-[rgba(239,68,68,0.2)]',
     muted:   'bg-[var(--surface-2)] text-[var(--text-tertiary)] border-[var(--border-subtle)]',
   };
 

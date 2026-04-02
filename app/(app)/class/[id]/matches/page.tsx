@@ -60,7 +60,7 @@ export default function MatchesPage() {
       {/* Top accent line */}
       <div
         className="pointer-events-none fixed top-0 left-0 right-0 h-px z-50"
-        style={{ background: 'linear-gradient(90deg, transparent, #f7365e, transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.6), rgba(6,182,212,0.5), transparent)' }}
         aria-hidden="true"
       />
 
@@ -70,18 +70,23 @@ export default function MatchesPage() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 gap-4">
             <LoadingSpinner size="lg" />
-            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Loading matches…</p>
+            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Loading matches\u2026</p>
           </div>
         ) : matches.length === 0 ? (
           <div
             className="rounded-[var(--radius-xl)] p-10 text-center space-y-5"
             style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
           >
-            <div className="text-5xl">🤍</div>
+            <div
+              className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto"
+              style={{ background: 'var(--blue-dim)', border: '1px solid var(--border-accent)' }}
+            >
+              <span style={{ color: 'var(--blue-light)' }}><HeartIcon className="h-7 w-7" /></span>
+            </div>
             <div>
-              <h3 className="text-title text-white">No matches yet</h3>
+              <h3 className="text-title" style={{ color: 'var(--text-primary)' }}>No matches yet</h3>
               <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
-                Keep liking classmates — when it&apos;s mutual, they&apos;ll appear here
+                Keep liking classmates \u2014 when it&apos;s mutual, they&apos;ll appear here
               </p>
             </div>
             <Button variant="secondary" size="sm" onClick={() => router.back()}>
@@ -121,38 +126,38 @@ export default function MatchesPage() {
                   className="overflow-hidden rounded-[var(--radius-lg)]"
                   style={{
                     background: 'var(--surface-1)',
-                    border: '1px solid rgba(247,54,94,0.28)',
-                    boxShadow: '0 4px 20px rgba(247,54,94,0.1)',
+                    border: '1px solid rgba(59,130,246,0.3)',
+                    boxShadow: '0 4px 20px rgba(59,130,246,0.08)',
                   }}
                 >
-                  <div className="h-[2px]" style={{ background: 'linear-gradient(90deg, #f7365e, #c026d3, #7c5cfc)' }} />
+                  <div className="h-[2px]" style={{ background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
                   <div className="p-4">
                     <div className="flex items-center gap-4">
                       <motion.div
-                        animate={{ scale: [1, 1.05, 1] }}
+                        animate={{ scale: [1, 1.04, 1] }}
                         transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.35, ease: 'easeInOut' }}
                       >
                         <Avatar name={match.otherUsername} size="lg" showRing pulse />
                       </motion.div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-white text-[1.0625rem] truncate tracking-tight">
+                        <p className="font-bold text-[1.0625rem] truncate tracking-tight" style={{ color: 'var(--text-primary)' }}>
                           {match.otherUsername}
                         </p>
                         <div className="flex items-center gap-1.5 mt-1">
-                          <HeartIcon className="h-3.5 w-3.5" />
-                          <p className="text-[0.8125rem] font-semibold" style={{ color: 'var(--pink-light)' }}>
+                          <span style={{ color: 'var(--blue-light)' }}><HeartIcon className="h-3.5 w-3.5" /></span>
+                          <p className="text-[0.8125rem] font-semibold" style={{ color: 'var(--blue-light)' }}>
                             Mutual match
                           </p>
                         </div>
                       </div>
                       <motion.div
-                        animate={{ scale: [1, 1.12, 1], rotate: [0, -5, 5, 0] }}
+                        animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.5 + 0.5, ease: 'easeInOut' }}
                         className="shrink-0"
                       >
                         <div
                           className="h-10 w-10 rounded-full flex items-center justify-center"
-                          style={{ background: 'linear-gradient(135deg, #f7365e, #f06233)', boxShadow: 'var(--shadow-pink)' }}
+                          style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', boxShadow: 'var(--shadow-blue)' }}
                         >
                           <HeartIcon className="h-5 w-5 text-white" />
                         </div>
@@ -168,7 +173,7 @@ export default function MatchesPage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
               className="text-center text-[0.7rem] pt-2 flex items-center justify-center gap-1.5"
-              style={{ color: 'var(--text-muted)' }}
+              style={{ color: 'var(--text-tertiary)' }}
             >
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
@@ -181,5 +186,3 @@ export default function MatchesPage() {
     </div>
   );
 }
-
-

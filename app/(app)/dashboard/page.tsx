@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -133,36 +133,37 @@ export default function DashboardPage() {
 
   return (
     <div className="lw-page-top" style={{ background: 'var(--bg)' }}>
-      {/* Top accent glow */}
+      {/* Top accent line */}
       <div
         className="pointer-events-none fixed top-0 left-0 right-0 h-px z-50"
-        style={{ background: 'linear-gradient(90deg, transparent, #f7365e, transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.6), rgba(6,182,212,0.5), transparent)' }}
         aria-hidden="true"
       />
 
-      <div className="max-w-lg mx-auto px-5 pt-10 pb-12 space-y-8">
-        {/* ── Header ── */}
+      <div className="max-w-lg mx-auto px-5 pt-10 pb-12 space-y-6">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="flex items-center justify-between"
         >
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             <div className="flex items-center gap-2.5">
               <div
-                className="h-8 w-8 rounded-xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #f7365e, #c026d3)', boxShadow: '0 4px 16px rgba(247,54,94,0.35)' }}
+                className="h-8 w-8 rounded-lg flex items-center justify-center"
+                style={{ background: 'var(--blue)', boxShadow: 'var(--blue-glow-sm)' }}
               >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
                 </svg>
               </div>
-              <h1 className="text-title text-white">{user?.username}</h1>
+              <h1 className="text-title" style={{ color: 'var(--text-primary)' }}>{user?.username}</h1>
             </div>
             <p className="text-[0.8125rem] pl-0.5" style={{ color: 'var(--text-secondary)' }}>
               {loading
-                ? 'Loading…'
+                ? 'Loading\u2026'
                 : totalClasses === 0
                 ? 'No classes yet'
                 : `${totalClasses} class${totalClasses !== 1 ? 'es' : ''}`}
@@ -186,11 +187,11 @@ export default function DashboardPage() {
           </Link>
         </motion.div>
 
-        {/* ── Quick actions ── */}
+        {/* Quick actions */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ delay: 0.07, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
           className="grid grid-cols-3 gap-2.5"
         >
           {[
@@ -204,11 +205,11 @@ export default function DashboardPage() {
           ))}
         </motion.div>
 
-        {/* ── Content ── */}
+        {/* Content */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
             <LoadingSpinner size="lg" />
-            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Loading your classes…</p>
+            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Loading your classes\u2026</p>
           </div>
         ) : totalClasses === 0 ? (
           <motion.div
@@ -218,15 +219,22 @@ export default function DashboardPage() {
             className="rounded-[var(--radius-xl)] p-10 text-center space-y-5"
             style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
           >
-            <div className="text-5xl">🎓</div>
+            <div
+              className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto"
+              style={{ background: 'var(--blue-dim)', border: '1px solid var(--border-accent)' }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--blue-light)' }}>
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
             <div>
-              <h3 className="text-title text-white">No classes yet</h3>
+              <h3 className="text-title" style={{ color: 'var(--text-primary)' }}>No classes yet</h3>
               <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
                 Create or join a class to start connecting with your classmates
               </p>
             </div>
             <Button variant="primary" size="md" onClick={() => router.push('/onboarding')}>
-              Get started →
+              Get started \u2192
             </Button>
           </motion.div>
         ) : (
@@ -237,7 +245,7 @@ export default function DashboardPage() {
                 key={school.id}
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: si * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ delay: si * 0.07, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div
                   className="overflow-hidden rounded-[var(--radius-lg)]"
@@ -251,19 +259,19 @@ export default function DashboardPage() {
                   >
                     <div
                       className="h-9 w-9 rounded-xl flex items-center justify-center text-base shrink-0"
-                      style={{ background: 'rgba(247,54,94,0.08)', border: '1px solid rgba(247,54,94,0.15)' }}
+                      style={{ background: 'var(--blue-dim)', border: '1px solid var(--border-accent)' }}
                     >
                       🏫
                     </div>
                     <div className="flex-1 text-left min-w-0">
-                      <p className="font-semibold text-white text-[0.9375rem] truncate">{school.name}</p>
+                      <p className="font-semibold text-[0.9375rem] truncate" style={{ color: 'var(--text-primary)' }}>{school.name}</p>
                       <p className="text-[0.75rem] mt-0.5" style={{ color: 'var(--text-secondary)' }}>
                         {classes.length} class{classes.length !== 1 ? 'es' : ''}
                       </p>
                     </div>
                     <motion.svg
                       animate={{ rotate: expandedSchools.has(school.id) ? 90 : 0 }}
-                      transition={{ duration: 0.22 }}
+                      transition={{ duration: 0.2 }}
                       width="14" height="14" viewBox="0 0 14 14" fill="none"
                       style={{ color: 'var(--text-tertiary)' }}
                       className="shrink-0"
@@ -278,7 +286,7 @@ export default function DashboardPage() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.24, ease: 'easeOut' }}
+                        transition={{ duration: 0.22, ease: 'easeOut' }}
                         className="overflow-hidden"
                       >
                         <div style={{ borderTop: '1px solid var(--border)' }}>
@@ -299,14 +307,9 @@ export default function DashboardPage() {
                                   >
                                     🎓
                                   </div>
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-[0.875rem] text-white font-medium truncate">{cls.name}</p>
-                                    <p className="text-[0.7rem] font-mono tracking-wide mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
-                                      {cls.inviteCode}
-                                    </p>
-                                  </div>
-                                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ color: 'var(--text-muted)' }} className="shrink-0">
-                                    <path d="M4.5 2.5L8 6l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                  <p className="font-medium flex-1 truncate text-[0.9rem]" style={{ color: 'var(--text-primary)' }}>{cls.name}</p>
+                                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ color: 'var(--text-tertiary)' }} className="shrink-0">
+                                    <path d="M5.5 3.5L9 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                   </svg>
                                 </div>
                               </Link>
@@ -322,100 +325,90 @@ export default function DashboardPage() {
 
             {/* Ungrouped classes */}
             {ungroupedClasses.length > 0 && (
-              <div className="space-y-2.5">
-                {schoolsData.length > 0 && (
-                  <p className="text-label px-0.5" style={{ color: 'var(--text-tertiary)' }}>
-                    OTHER CLASSES
-                  </p>
-                )}
-                {ungroupedClasses.map(({ group, role }, i) => (
-                  <motion.div
-                    key={group.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (schoolsData.length + i) * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Link href={`/class/${group.id}`}>
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: schoolsData.length * 0.07, duration: 0.38 }}
+              >
+                <p className="text-label mb-2" style={{ color: 'var(--text-tertiary)' }}>OTHER CLASSES</p>
+                <div
+                  className="overflow-hidden rounded-[var(--radius-lg)]"
+                  style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+                >
+                  {ungroupedClasses.map(({ group }, i) => (
+                    <Link key={group.id} href={`/class/${group.id}`}>
                       <div
-                        className="rounded-[var(--radius-lg)] p-4 flex items-center gap-3.5 card-interactive"
-                        style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
+                        className="hover-row flex items-center gap-3 px-4 py-3"
+                        style={{ borderBottom: i < ungroupedClasses.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}
                       >
                         <div
-                          className="h-10 w-10 rounded-xl flex items-center justify-center text-base shrink-0"
-                          style={{ background: 'rgba(124,92,252,0.08)', border: '1px solid rgba(124,92,252,0.15)' }}
+                          className="h-9 w-9 rounded-xl flex items-center justify-center text-base shrink-0"
+                          style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}
                         >
                           🎓
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-semibold text-white text-[0.9375rem] truncate">{group.name}</h3>
-                            <Badge variant={role === 'owner' ? 'pink' : 'muted'}>
-                              {role === 'owner' ? 'Owner' : 'Member'}
-                            </Badge>
-                          </div>
-                          <p className="text-[0.75rem] font-mono tracking-wide mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
-                            {group.inviteCode}
-                          </p>
-                        </div>
+                        <p className="font-medium flex-1 truncate" style={{ color: 'var(--text-primary)' }}>{group.name}</p>
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ color: 'var(--text-tertiary)' }} className="shrink-0">
                           <path d="M5.5 3.5L9 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
                     </Link>
-                  </motion.div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </motion.div>
             )}
           </div>
         )}
       </div>
 
-      {/* ── Modal ── */}
+      {/* Modal */}
       <AnimatePresence>
         {modal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-            style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(4px)' }}
-            onClick={(e) => { if (e.target === e.currentTarget) setModal(null); }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 sm:p-5"
+            style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)' }}
+            onClick={() => setModal(null)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.94, opacity: 0, y: 12 }}
-              transition={{ type: 'spring', damping: 28, stiffness: 340 }}
+              initial={{ opacity: 0, y: 32, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 24, scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 28 }}
               className="w-full max-w-sm"
+              onClick={(e) => e.stopPropagation()}
             >
               <div
                 className="rounded-[var(--radius-xl)] p-6 space-y-5"
-                style={{ background: 'var(--surface-1)', border: '1px solid var(--border-strong)', boxShadow: 'var(--shadow-xl)' }}
+                style={{ background: 'var(--surface-1)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-xl)' }}
               >
                 <div className="flex items-center justify-between">
-                  <h2 className="text-title text-white">
-                    {modal === 'create' ? 'Create a class' : 'Join a class'}
+                  <h2 className="font-bold text-[1.125rem]" style={{ color: 'var(--text-primary)' }}>
+                    {modal === 'create' ? 'New class' : 'Join class'}
                   </h2>
                   <button
                     onClick={() => setModal(null)}
-                    className="h-8 w-8 rounded-full flex items-center justify-center transition-colors"
+                    className="h-8 w-8 rounded-lg flex items-center justify-center transition-colors"
                     style={{ background: 'var(--surface-2)', color: 'var(--text-secondary)' }}
-                    aria-label="Close"
                   >
-                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                      <path d="M1.5 1.5l10 10M11.5 1.5l-10 10" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
                     </svg>
                   </button>
                 </div>
+
                 <form onSubmit={modal === 'create' ? handleCreate : handleJoin} className="space-y-4">
                   {modal === 'create' ? (
                     <Input
                       label="Class name"
-                      placeholder="e.g. CS101, History 2025…"
+                      placeholder="e.g. Physics A, CS101\u2026"
                       value={groupName}
                       onChange={(e) => setGroupName(e.target.value)}
-                      required
                       autoFocus
+                      required
                     />
                   ) : (
                     <Input
@@ -425,10 +418,11 @@ export default function DashboardPage() {
                       onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                       className="font-mono tracking-[0.25em] text-center text-xl uppercase"
                       maxLength={6}
-                      required
                       autoFocus
+                      required
                     />
                   )}
+
                   <AnimatePresence>
                     {error && (
                       <motion.div
@@ -446,8 +440,9 @@ export default function DashboardPage() {
                       </motion.div>
                     )}
                   </AnimatePresence>
+
                   <div className="flex gap-2.5">
-                    <Button type="button" variant="ghost" size="md" onClick={() => setModal(null)} className="flex-1">
+                    <Button type="button" variant="ghost" size="md" className="flex-1" onClick={() => setModal(null)}>
                       Cancel
                     </Button>
                     <Button type="submit" variant="primary" size="md" loading={submitting} className="flex-1">
@@ -463,5 +458,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-

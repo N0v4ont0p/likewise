@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { deleteAccount, logOut } from '@/lib/auth';
@@ -46,8 +46,15 @@ export default function SettingsPage() {
 
   return (
     <div className="lw-page-top" style={{ background: 'var(--bg)' }}>
-      <div className="max-w-lg mx-auto px-5 pt-10 pb-12 space-y-6">
-        <PageHeader title="Settings" back="/dashboard" />
+      {/* Top accent line */}
+      <div
+        className="pointer-events-none fixed top-0 left-0 right-0 h-px z-50"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.6), rgba(6,182,212,0.5), transparent)' }}
+        aria-hidden="true"
+      />
+
+      <div className="max-w-lg mx-auto px-5 pt-10 pb-12 space-y-5">
+        <PageHeader title="Account" back="/dashboard" />
 
         {/* Profile card */}
         <motion.div
@@ -60,7 +67,7 @@ export default function SettingsPage() {
           <div className="flex items-center gap-4">
             <Avatar name={user?.username || '?'} size="lg" />
             <div>
-              <p className="font-bold text-white text-[1.0625rem]">{user?.username}</p>
+              <p className="font-bold text-[1.0625rem]" style={{ color: 'var(--text-primary)' }}>{user?.username}</p>
               <p className="text-[0.8125rem] mt-0.5" style={{ color: 'var(--text-secondary)' }}>
                 {user?.createdAt
                   ? `Joined ${new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`
@@ -78,7 +85,7 @@ export default function SettingsPage() {
           className="overflow-hidden rounded-[var(--radius-xl)]"
           style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
         >
-          <div className="px-5 pt-5 pb-3">
+          <div className="px-5 pt-4 pb-3">
             <p className="text-label" style={{ color: 'var(--text-tertiary)' }}>PRIVACY</p>
           </div>
           <div style={{ borderTop: '1px solid var(--border)' }}>
@@ -98,7 +105,7 @@ export default function SettingsPage() {
                   {item.icon}
                 </div>
                 <div>
-                  <p className="font-semibold text-white text-[0.9375rem]">{item.title}</p>
+                  <p className="font-semibold text-[0.9375rem]" style={{ color: 'var(--text-primary)' }}>{item.title}</p>
                   <p className="text-[0.8125rem] mt-0.5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{item.desc}</p>
                 </div>
               </div>
@@ -155,7 +162,7 @@ export default function SettingsPage() {
                 <Input
                   label="Confirm with your password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
                   value={deletePassword}
                   onChange={(e) => setDeletePassword(e.target.value)}
                   required
@@ -195,5 +202,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-

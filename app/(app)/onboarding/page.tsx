@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -160,7 +160,7 @@ export default function OnboardingPage() {
         <ReactConfetti
           width={typeof window !== 'undefined' ? window.innerWidth : 400}
           height={typeof window !== 'undefined' ? window.innerHeight : 800}
-          colors={['#f43f5e', '#ec4899', '#a855f7', '#6366f1', '#fff']}
+          colors={['#3b82f6', '#60a5fa', '#06b6d4', '#818cf8', '#fff']}
           recycle={false}
           numberOfPieces={200}
         />
@@ -177,8 +177,8 @@ export default function OnboardingPage() {
               exit={{ opacity: 0, y: -10 }}
               className="text-center"
             >
-              <h1 className="text-2xl font-bold text-white">Welcome to Likewise</h1>
-              <p className="text-[var(--text-secondary)] text-sm mt-1">Here&apos;s how it works</p>
+              <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Let&apos;s get you set up</h1>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Here&apos;s how it works</p>
             </motion.div>
           ) : step < 2 ? (
             <motion.div
@@ -189,10 +189,10 @@ export default function OnboardingPage() {
               className="space-y-4"
             >
               <div>
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
                   {step === 0 ? 'Set up your school' : 'Join or create a class'}
                 </h1>
-                <p className="text-[var(--text-secondary)] text-sm mt-1">
+                <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
                   {step === 0
                     ? 'Schools group your classes together'
                     : selectedSchool
@@ -211,8 +211,8 @@ export default function OnboardingPage() {
               className="space-y-4"
             >
               <div className="text-center">
-                <h1 className="text-2xl font-bold text-white">You&apos;re all set! 🎉</h1>
-                <p className="text-[var(--text-secondary)] text-sm mt-1">Time to meet your classmates</p>
+                <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>You&apos;re all set! 🎉</h1>
+                <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Time to meet your classmates</p>
               </div>
               <StepIndicator steps={STEPS} currentStep={step} />
             </motion.div>
@@ -307,7 +307,7 @@ export default function OnboardingPage() {
   );
 }
 
-// ─── Welcome Step ────────────────────────────────────────────────────────────
+// Welcome Step
 
 function WelcomeStep({ onContinue }: { onContinue: () => void }) {
   return (
@@ -320,7 +320,7 @@ function WelcomeStep({ onContinue }: { onContinue: () => void }) {
           {[
             { icon: '🏫', title: 'Join a school', desc: 'Your school groups everything under one roof' },
             { icon: '🎓', title: 'Enter a class', desc: 'Classes let you connect with specific classmates' },
-            { icon: '💝', title: 'Like privately', desc: 'Only mutual likes ever become visible — to both sides' },
+            { icon: '💙', title: 'Like privately', desc: 'Only mutual likes ever become visible — to both sides' },
           ].map((item, i) => (
             <motion.div
               key={i}
@@ -336,7 +336,7 @@ function WelcomeStep({ onContinue }: { onContinue: () => void }) {
                 {item.icon}
               </div>
               <div>
-                <p className="font-semibold text-white text-[0.9375rem]">{item.title}</p>
+                <p className="font-semibold text-[0.9375rem]" style={{ color: 'var(--text-primary)' }}>{item.title}</p>
                 <p className="text-sm mt-0.5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{item.desc}</p>
               </div>
             </motion.div>
@@ -344,7 +344,7 @@ function WelcomeStep({ onContinue }: { onContinue: () => void }) {
         </div>
         <div className="pt-1">
           <Button variant="primary" size="lg" className="w-full" onClick={onContinue}>
-            Let&apos;s get started →
+            Let&apos;s get started \u2192
           </Button>
         </div>
       </div>
@@ -352,7 +352,7 @@ function WelcomeStep({ onContinue }: { onContinue: () => void }) {
   );
 }
 
-// ─── School Step ─────────────────────────────────────────────────────────────
+// School Step
 
 function SchoolStep({
   schoolAction,
@@ -394,7 +394,7 @@ function SchoolStep({
           <OptionCard
             icon="🔍"
             title="Use an existing school"
-            description="You&apos;re already part of a school"
+            description="You're already part of a school"
             onClick={() => onActionSelect('select-school')}
           />
         </div>
@@ -412,7 +412,7 @@ function SchoolStep({
         <form onSubmit={onCreateSchool} className="space-y-4">
           <Input
             label="School name"
-            placeholder="e.g. Westview High, MIT, BCA Batch 2025…"
+            placeholder="e.g. Westview High, MIT, BCA Batch 2025\u2026"
             value={schoolName}
             onChange={(e) => onSchoolNameChange(e.target.value)}
             required
@@ -463,7 +463,7 @@ function SchoolStep({
                   style={{ background: 'var(--surface-3)' }}
                 >🏫</div>
                 <div>
-                  <p className="font-semibold text-white text-[0.9375rem]">{school.name}</p>
+                  <p className="font-semibold text-[0.9375rem]" style={{ color: 'var(--text-primary)' }}>{school.name}</p>
                   <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>Tap to select</p>
                 </div>
                 <svg className="ml-auto shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'var(--text-tertiary)' }}>
@@ -479,7 +479,7 @@ function SchoolStep({
   );
 }
 
-// ─── Class Step ───────────────────────────────────────────────────────────────
+// Class Step
 
 function ClassStep({
   classAction,
@@ -542,7 +542,7 @@ function ClassStep({
         {classAction === 'create' ? (
           <Input
             label="Class name"
-            placeholder="e.g. CS101, Physics A, Math Olympiad…"
+            placeholder="e.g. CS101, Physics A, Math Olympiad\u2026"
             value={className}
             onChange={(e) => onClassNameChange(e.target.value)}
             required
@@ -569,7 +569,7 @@ function ClassStep({
   );
 }
 
-// ─── Done Step ────────────────────────────────────────────────────────────────
+// Done Step
 
 function DoneStep({
   schoolName,
@@ -582,43 +582,45 @@ function DoneStep({
 }) {
   return (
     <div
-      className="rounded-[var(--radius-xl)] p-8 text-center space-y-6"
+      className="rounded-[var(--radius-xl)] overflow-hidden"
       style={{
         background: 'var(--surface-1)',
-        border: '1px solid rgba(247,54,94,0.35)',
-        boxShadow: '0 0 40px rgba(247,54,94,0.1)',
+        border: '1px solid rgba(59,130,246,0.35)',
+        boxShadow: '0 0 40px rgba(59,130,246,0.1)',
       }}
     >
-      <div className="h-1" style={{ background: 'linear-gradient(90deg, #f7365e, #c026d3, #7c5cfc)', borderRadius: '0 0 4px 4px', marginTop: -32, marginLeft: -32, marginRight: -32 }} />
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.08 }}
-        className="text-6xl"
-      >
-        🎉
-      </motion.div>
-      <div className="space-y-2">
-        <h2 className="text-heading text-white">You&apos;re in!</h2>
-        {schoolName && (
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            <span className="text-white font-medium">{schoolName}</span>
-            <span className="mx-1.5" style={{ color: 'var(--text-tertiary)' }}>·</span>
-            <span className="font-medium" style={{ color: 'var(--pink-light)' }}>{className}</span>
-          </p>
-        )}
-        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Start connecting with your classmates</p>
+      <div className="h-1" style={{ background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
+      <div className="p-8 text-center space-y-6">
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.08 }}
+          className="text-6xl"
+        >
+          🎉
+        </motion.div>
+        <div className="space-y-2">
+          <h2 className="text-heading" style={{ color: 'var(--text-primary)' }}>You&apos;re in!</h2>
+          {schoolName && (
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <span style={{ color: 'var(--text-primary)' }} className="font-medium">{schoolName}</span>
+              <span className="mx-1.5" style={{ color: 'var(--text-tertiary)' }}>·</span>
+              <span className="font-medium" style={{ color: 'var(--blue-light)' }}>{className}</span>
+            </p>
+          )}
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Start connecting with your classmates</p>
+        </div>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <Button variant="primary" size="lg" onClick={onEnter} className="w-full">
+            Enter class \u2192
+          </Button>
+        </motion.div>
       </div>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <Button variant="primary" size="lg" onClick={onEnter} className="w-full">
-          Enter class →
-        </Button>
-      </motion.div>
     </div>
   );
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// Helpers
 
 function OptionCard({
   icon,
@@ -633,7 +635,7 @@ function OptionCard({
 }) {
   return (
     <motion.button
-      whileHover={{ scale: 1.01, y: -1 }}
+      whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       onClick={onClick}
       className="w-full text-left px-4 py-4 rounded-[var(--radius-md)] transition-colors group"
@@ -647,10 +649,10 @@ function OptionCard({
           {icon}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-white text-[0.9375rem] leading-tight">{title}</p>
-          <p className="text-[0.8125rem] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{description}</p>
+          <p className="font-semibold text-[0.9375rem] leading-tight" style={{ color: 'var(--text-primary)' }}>{title}</p>
+          <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>{description}</p>
         </div>
-        <svg className="shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'var(--text-tertiary)' }}>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'var(--text-tertiary)' }} className="shrink-0">
           <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
@@ -661,12 +663,12 @@ function OptionCard({
 function BackButton({ onClick, label }: { onClick: () => void; label: string }) {
   return (
     <button
-      type="button"
       onClick={onClick}
-      className="flex items-center gap-1.5 text-[0.8125rem] text-[var(--text-secondary)] hover:text-white transition-colors"
+      className="flex items-center gap-1.5 text-sm font-medium transition-colors"
+      style={{ color: 'var(--text-secondary)' }}
     >
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path d="M9 10.5L5.5 7 9 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M9 11.5L4.5 7L9 2.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
       {label}
     </button>
@@ -675,13 +677,15 @@ function BackButton({ onClick, label }: { onClick: () => void; label: string }) 
 
 function ErrorNote({ children }: { children: React.ReactNode }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -4 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm"
+    <div
+      className="flex items-center gap-2 rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm"
       style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171' }}
     >
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" className="shrink-0">
+        <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.3"/>
+        <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+      </svg>
       {children}
-    </motion.div>
+    </div>
   );
 }

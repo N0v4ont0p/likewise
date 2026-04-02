@@ -132,7 +132,7 @@ export default function ClassPage() {
 
   if (loadingGroup) {
     return (
-      <div className="lw-page">
+      <div className="lw-page" style={{ background: 'var(--bg)' }}>
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -140,14 +140,14 @@ export default function ClassPage() {
 
   if (!group) {
     return (
-      <div className="lw-page px-5">
+      <div className="lw-page px-5" style={{ background: 'var(--bg)' }}>
         <div
           className="max-w-sm w-full rounded-[var(--radius-xl)] overflow-hidden text-center p-10 space-y-5"
           style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
         >
           <div className="text-5xl">🔍</div>
           <div>
-            <h3 className="text-title text-white">Class not found</h3>
+            <h3 className="text-title" style={{ color: 'var(--text-primary)' }}>Class not found</h3>
             <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
               This class may have been removed or the link is invalid.
             </p>
@@ -169,7 +169,7 @@ export default function ClassPage() {
         <ReactConfetti
           width={windowSize.width}
           height={windowSize.height}
-          colors={['#f43f5e', '#ec4899', '#a855f7', '#6366f1', '#fbbf24', '#fff']}
+          colors={['#3b82f6', '#60a5fa', '#06b6d4', '#818cf8', '#fff']}
           recycle={false}
           numberOfPieces={280}
           gravity={0.18}
@@ -179,7 +179,7 @@ export default function ClassPage() {
       {/* Top accent line */}
       <div
         className="pointer-events-none fixed top-0 left-0 right-0 h-px z-50"
-        style={{ background: 'linear-gradient(90deg, transparent, #f7365e, transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.6), rgba(6,182,212,0.5), transparent)' }}
         aria-hidden="true"
       />
 
@@ -213,14 +213,14 @@ export default function ClassPage() {
               <p className="text-label mb-2" style={{ color: 'var(--text-tertiary)' }}>INVITE CODE</p>
               <p
                 className="font-mono text-[2rem] font-black tracking-[0.22em] leading-none"
-                style={{ color: 'var(--pink)' }}
+                style={{ color: 'var(--blue-light)' }}
               >
                 {group.inviteCode}
               </p>
             </div>
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.94 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
               onClick={copyInviteCode}
               className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--radius-md)] text-sm font-semibold border transition-all duration-150"
               style={copied
@@ -270,14 +270,14 @@ export default function ClassPage() {
               className="rounded-[var(--radius-md)] p-4 text-center"
               style={{ background: 'var(--surface-1)', border: '1px solid var(--border)' }}
             >
-              <p className="text-[1.5rem] font-black text-white tabular-nums">{otherMembers.length}</p>
+              <p className="text-[1.5rem] font-black tabular-nums" style={{ color: 'var(--text-primary)' }}>{otherMembers.length}</p>
               <p className="text-[0.7rem] font-medium mt-0.5" style={{ color: 'var(--text-secondary)' }}>Classmates</p>
             </div>
             <div
               className="rounded-[var(--radius-md)] p-4 text-center"
-              style={{ background: 'rgba(247,54,94,0.06)', border: '1px solid rgba(247,54,94,0.2)' }}
+              style={{ background: 'var(--blue-dim)', border: '1px solid var(--border-accent)' }}
             >
-              <p className="text-[1.5rem] font-black tabular-nums" style={{ color: 'var(--pink)' }}>{likedCount}</p>
+              <p className="text-[1.5rem] font-black tabular-nums" style={{ color: 'var(--blue-light)' }}>{likedCount}</p>
               <p className="text-[0.7rem] font-medium mt-0.5" style={{ color: 'var(--text-secondary)' }}>You liked</p>
             </div>
           </motion.div>
@@ -309,7 +309,7 @@ export default function ClassPage() {
             >
               <div className="text-4xl">👋</div>
               <div>
-                <h3 className="text-title text-white">No classmates yet</h3>
+                <h3 className="text-title" style={{ color: 'var(--text-primary)' }}>No classmates yet</h3>
                 <p className="text-sm mt-1.5" style={{ color: 'var(--text-secondary)' }}>
                   Share the invite code to get people into this class
                 </p>
@@ -333,16 +333,16 @@ export default function ClassPage() {
                     <div
                       className="rounded-[var(--radius-lg)] p-4 transition-all duration-200"
                       style={{
-                        background: isLiked ? 'rgba(247,54,94,0.06)' : 'var(--surface-1)',
-                        border: isLiked ? '1px solid rgba(247,54,94,0.3)' : '1px solid var(--border)',
+                        background: isLiked ? 'var(--blue-dim)' : 'var(--surface-1)',
+                        border: isLiked ? '1px solid var(--border-accent)' : '1px solid var(--border)',
                       }}
                     >
                       <div className="flex items-center gap-3.5">
                         <Avatar name={displayName} size="md" showRing={isLiked} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <p className="font-semibold text-white text-[0.9375rem] truncate">{displayName}</p>
-                            {member.role === 'owner' && <Badge variant="pink" size="sm">Owner</Badge>}
+                            <p className="font-semibold text-[0.9375rem] truncate" style={{ color: 'var(--text-primary)' }}>{displayName}</p>
+                            {member.role === 'owner' && <Badge variant="blue" size="sm">Owner</Badge>}
                           </div>
                           <AnimatePresence>
                             {isLiked && (
@@ -351,9 +351,9 @@ export default function ClassPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -3 }}
                                 className="text-[0.7rem] mt-0.5 font-medium"
-                                style={{ color: 'var(--pink-light)' }}
+                                style={{ color: 'var(--blue-light)' }}
                               >
-                                ✦ You liked them
+                                \u2713 You liked them
                               </motion.p>
                             )}
                           </AnimatePresence>
@@ -362,14 +362,14 @@ export default function ClassPage() {
                         {/* Heart button */}
                         <motion.button
                           whileTap={{ scale: isPending ? 1 : 0.78 }}
-                          whileHover={{ scale: isPending ? 1 : 1.12 }}
+                          whileHover={{ scale: isPending ? 1 : 1.1 }}
                           transition={{ type: 'spring', stiffness: 500, damping: 16 }}
                           onClick={() => handleLike(member)}
                           disabled={isPending}
                           aria-label={isLiked ? 'Unlike' : 'Like'}
                           className="relative h-11 w-11 rounded-full flex items-center justify-center shrink-0 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           style={isLiked
-                            ? { background: 'rgba(247,54,94,0.12)', border: '1px solid rgba(247,54,94,0.5)', color: 'var(--pink)' }
+                            ? { background: 'var(--blue-dim)', border: '1px solid var(--border-accent)', color: 'var(--blue-light)' }
                             : { background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--text-tertiary)' }
                           }
                         >
@@ -405,7 +405,7 @@ export default function ClassPage() {
         </div>
       </div>
 
-      {/* ── Match modal ── */}
+      {/* Match modal */}
       <AnimatePresence>
         {showMatch && (
           <motion.div
@@ -429,12 +429,12 @@ export default function ClassPage() {
                 className="overflow-hidden rounded-[var(--radius-xl)]"
                 style={{
                   background: 'var(--surface-1)',
-                  border: '1px solid rgba(247,54,94,0.4)',
-                  boxShadow: '0 0 60px rgba(247,54,94,0.25), var(--shadow-xl)',
+                  border: '1px solid rgba(59,130,246,0.4)',
+                  boxShadow: '0 0 60px rgba(59,130,246,0.2), var(--shadow-xl)',
                 }}
               >
                 {/* Gradient bar */}
-                <div className="h-1.5" style={{ background: 'linear-gradient(90deg, #f7365e, #c026d3, #7c5cfc)' }} />
+                <div className="h-1.5" style={{ background: 'linear-gradient(90deg, #3b82f6, #06b6d4)' }} />
 
                 <div className="p-8 text-center space-y-5">
                   <div className="flex items-center justify-center">
@@ -443,58 +443,34 @@ export default function ClassPage() {
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: 0.1, type: 'spring', stiffness: 300, damping: 15 }}
                       className="h-20 w-20 rounded-full flex items-center justify-center"
-                      style={{ background: 'linear-gradient(135deg, #f7365e, #f06233)', boxShadow: 'var(--shadow-pink)' }}
+                      style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', boxShadow: 'var(--shadow-blue)' }}
                     >
                       <motion.div
                         animate={{ scale: [1, 1.15, 1, 1.08, 1] }}
                         transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
                       >
-                        <svg width="36" height="36" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
+                        <HeartIcon filled className="h-8 w-8 text-white" />
                       </motion.div>
                     </motion.div>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <motion.h2
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.18, duration: 0.4 }}
-                      className="text-[1.875rem] font-extrabold text-white tracking-tight"
-                    >
-                      It&apos;s a match!
-                    </motion.h2>
-                    <motion.p
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.26, duration: 0.38 }}
-                      className="text-[0.9375rem] leading-relaxed"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
-                      You and{' '}
-                      <span className="font-bold" style={{ color: 'var(--pink-light)' }}>{showMatch.username}</span>{' '}
-                      like each other 💝
-                    </motion.p>
+                  <div className="space-y-2">
+                    <h2 className="text-heading" style={{ color: 'var(--text-primary)' }}>It&apos;s a match!</h2>
+                    <p style={{ color: 'var(--text-secondary)' }}>
+                      You and <span className="font-bold" style={{ color: 'var(--text-primary)' }}>{showMatch.username}</span> liked each other
+                    </p>
                   </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.34, duration: 0.38 }}
-                    className="space-y-2.5 pt-1"
-                  >
-                    <Link href={`/class/${id}/matches`} onClick={() => setShowMatch(null)}>
-                      <Button variant="primary" size="md" className="w-full">See your matches</Button>
+                  <div className="flex gap-2.5">
+                    <Button variant="ghost" size="md" className="flex-1" onClick={() => setShowMatch(null)}>
+                      Later
+                    </Button>
+                    <Link href={`/class/${id}/matches`} className="flex-1" onClick={() => setShowMatch(null)}>
+                      <Button variant="primary" size="md" className="w-full">
+                        View matches
+                      </Button>
                     </Link>
-                    <button
-                      onClick={() => setShowMatch(null)}
-                      className="w-full text-sm py-1 font-medium transition-colors"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
-                      Continue browsing
-                    </button>
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -504,5 +480,3 @@ export default function ClassPage() {
     </div>
   );
 }
-
-

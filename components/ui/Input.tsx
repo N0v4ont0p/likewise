@@ -18,16 +18,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full space-y-1.5">
         {label && (
-          <label className="block text-[0.8125rem] font-medium text-[var(--text-secondary)] tracking-wide">
+          <label className="block text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
             {label}
           </label>
         )}
         <div
           className={cn(
             'relative rounded-[var(--radius-md)] transition-shadow duration-200',
-            isFocused
-              ? 'shadow-[0_0_0_2px_rgba(247,54,94,0.4)]'
-              : 'shadow-none'
+            isFocused ? 'shadow-[0_0_0_2px_rgba(59,130,246,0.4)]' : 'shadow-none'
           )}
         >
           {icon && (
@@ -39,12 +37,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             className={cn(
               'w-full rounded-[var(--radius-md)] bg-[var(--surface-2)] border px-4 py-3',
-              'text-white text-[0.9375rem] placeholder-[var(--text-muted)]',
+              'text-[var(--text-primary)] text-[0.9375rem] placeholder-[var(--text-tertiary)]',
               'focus:outline-none transition-colors duration-150',
               isFocused
-                ? 'border-[rgba(247,54,94,0.5)] bg-[var(--surface-3)]'
-                : 'border-[var(--border)] hover:border-[#3a3a56]',
-              error && 'border-red-500/60 focus:border-red-500/80',
+                ? 'border-[var(--blue)] bg-[var(--surface-2)]'
+                : 'border-[var(--border)] hover:border-[var(--border-strong)]',
+              error && 'border-red-500/60',
               icon && 'pl-10',
               suffix && 'pr-10',
               className
@@ -72,7 +70,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {hint && !error && (
-          <p className="text-xs text-[var(--text-tertiary)]">{hint}</p>
+          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{hint}</p>
         )}
       </div>
     );
@@ -80,3 +78,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 );
 
 Input.displayName = 'Input';
+

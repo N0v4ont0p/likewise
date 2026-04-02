@@ -41,24 +41,21 @@ export const PageHeader = ({
     >
       <div className="flex items-center gap-3 min-w-0">
         {back !== undefined && (
-          <motion.button
+          <button
             onClick={handleBack}
-            whileHover={{ scale: 1.08, x: -1 }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-            className="shrink-0 h-9 w-9 rounded-full bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-3)] hover:border-[#3a3a58] transition-colors"
+            className="shrink-0 h-8 w-8 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-3)] hover:border-[var(--border-strong)] transition-colors"
             aria-label="Go back"
           >
-            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" className="shrink-0">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
               <path
-                d="M9.5 12L5 7.5L9.5 3"
+                d="M9 11.5L4.5 7L9 2.5"
                 stroke="currentColor"
-                strokeWidth="1.8"
+                strokeWidth="1.75"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
-          </motion.button>
+          </button>
         )}
         <div className="min-w-0">
           {breadcrumb && breadcrumb.length > 0 && (
@@ -66,18 +63,18 @@ export const PageHeader = ({
               {breadcrumb.map((crumb, i) => (
                 <span key={i} className="flex items-center gap-1.5">
                   {i > 0 && (
-                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" className="text-[var(--text-muted)]">
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" style={{ color: 'var(--text-tertiary)' }}>
                       <path d="M2 1.5l3 2.5-3 2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   )}
-                  <span className="text-[0.6875rem] text-[var(--text-tertiary)] truncate font-medium tracking-wide">{crumb.label}</span>
+                  <span className="text-[0.6875rem] font-medium tracking-wide truncate" style={{ color: 'var(--text-tertiary)' }}>{crumb.label}</span>
                 </span>
               ))}
             </div>
           )}
-          <h1 className="text-[1.3125rem] font-bold text-white truncate leading-tight tracking-tight">{title}</h1>
+          <h1 className="text-[1.25rem] font-bold truncate leading-tight tracking-tight" style={{ color: 'var(--text-primary)' }}>{title}</h1>
           {subtitle && (
-            <p className="text-[0.8125rem] text-[var(--text-secondary)] mt-0.5 truncate">{subtitle}</p>
+            <p className="text-[0.8125rem] mt-0.5 truncate" style={{ color: 'var(--text-secondary)' }}>{subtitle}</p>
           )}
         </div>
       </div>
@@ -85,3 +82,4 @@ export const PageHeader = ({
     </motion.div>
   );
 };
+

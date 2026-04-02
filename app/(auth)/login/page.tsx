@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signIn } from '@/lib/auth';
@@ -48,43 +48,24 @@ export default function LoginPage() {
 
   return (
     <div className="lw-page px-5">
-      {/* Background glow */}
       <div
         className="pointer-events-none fixed inset-0 z-0"
-        style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(247,54,94,0.07) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(59,130,246,0.06) 0%, transparent 70%)' }}
         aria-hidden="true"
       />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-[400px] space-y-8 relative z-10"
       >
-        {/* Logo */}
-        <div className="text-center space-y-4">
-          <motion.div
-            animate={{ y: [0, -5, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="inline-flex"
-          >
-            <div
-              className="h-16 w-16 rounded-2xl flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, #f7365e, #c026d3)',
-                boxShadow: '0 0 32px rgba(247,54,94,0.4)',
-              }}
-            >
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
-            </div>
-          </motion.div>
+        {/* Wordmark */}
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-bold gradient-text">Likewise</h1>
           <div>
-            <h1 className="text-heading text-white">Welcome back</h1>
-            <p className="text-[0.9rem] mt-2" style={{ color: 'var(--text-secondary)' }}>
-              Sign in to your Likewise account
-            </p>
+            <p className="text-[1.25rem] font-bold" style={{ color: 'var(--text-primary)' }}>Sign in to Likewise</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Enter your credentials to continue</p>
           </div>
         </div>
 
@@ -149,7 +130,7 @@ export default function LoginPage() {
               size="lg"
               loading={loading}
               disabled={!canSubmit}
-              className="w-full font-bold text-[1rem] mt-1"
+              className="w-full font-semibold mt-1"
             >
               Sign in →
             </Button>
@@ -157,17 +138,16 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
-          Don&apos;t have an account?{' '}
+          New here?{' '}
           <Link
             href="/signup"
             className="font-semibold transition-colors"
-            style={{ color: 'var(--pink-light)' }}
+            style={{ color: 'var(--blue-light)' }}
           >
-            Create one free
+            Create an account
           </Link>
         </p>
       </motion.div>
     </div>
   );
 }
-

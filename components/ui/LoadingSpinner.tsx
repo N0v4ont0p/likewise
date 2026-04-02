@@ -31,16 +31,16 @@ export const LoadingSpinner = ({ size = 'md', className }: LoadingSpinnerProps) 
         {/* Active arc */}
         <circle
           cx="18" cy="18" r="15"
-          stroke="url(#spinner-grad)"
+          stroke="url(#spinner-grad-blue)"
           strokeWidth={s.stroke}
           strokeLinecap="round"
           strokeDasharray="60 94"
           strokeDashoffset="0"
         />
         <defs>
-          <linearGradient id="spinner-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%"   stopColor="#f7365e" />
-            <stop offset="100%" stopColor="#f06233" />
+          <linearGradient id="spinner-grad-blue" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#06b6d4" />
           </linearGradient>
         </defs>
       </motion.svg>
@@ -53,10 +53,12 @@ export const LoadingDots = ({ className }: { className?: string }) => (
     {[0, 1, 2].map((i) => (
       <motion.div
         key={i}
-        className="h-1.5 w-1.5 rounded-full bg-[var(--pink)]"
+        className="h-1.5 w-1.5 rounded-full bg-[var(--blue)]"
         animate={{ opacity: [0.3, 1, 0.3], scale: [0.75, 1.15, 0.75] }}
         transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.18, ease: 'easeInOut' }}
       />
     ))}
   </div>
 );
+
+
